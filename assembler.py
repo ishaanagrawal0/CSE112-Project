@@ -27,3 +27,14 @@ operations = {
     'je' : '11111',
     'hlt' : '11010',
 }
+#7 registers and one flag register we have in the question
+registers={
+    "R0":"000",
+    "R1":"001",
+    "R2":"010",
+    "R3":"011",
+    "R4":"100",
+    "R5":"101",
+    "R6":"110",
+    "FLAGS":"111"
+}

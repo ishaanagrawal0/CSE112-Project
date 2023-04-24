@@ -83,6 +83,29 @@ def Subtraction(reg1,reg2,reg3):
     s+=registers[reg3]
     
     return s
+
+def Load(reg1,Mem_addr):
+    s="00100"
+    s+="0"
+    s+=registers[reg1]
+    Mem_addr=int(Mem_addr)
+    x=str(bin(Mem_addr)[2:])
+    while len(x)<7:
+        x="0"+x
+    s+=x
+    return s
+
+def Store(reg1,Mem_addr):
+    s="00101"
+    s+="0"
+    s+=registers[reg1]
+    Mem_addr=int(Mem_addr)
+    x=str(bin(Mem_addr)[2:])
+    while len(x)<7:
+        x="0"+x
+    s+=x
+    return s
+
 def Multiply(reg1,reg2,reg3):
     #format is reg1=reg2.reg3
     s="00110"
@@ -91,6 +114,35 @@ def Multiply(reg1,reg2,reg3):
     s+=registers[reg2]
     s+=registers[reg3]
     
+    return s
+
+def Divide(reg3,reg4):
+    s="00111"
+    s+="0"*5
+    s+=registers[reg3]
+    s+=registers[reg4]
+    return s
+
+def Right_Shift(reg1,Imm):
+    s="01000"
+    s+="0"
+    s+=registers[reg1]
+    Imm=int(Imm)
+    x=str(bin(Imm)[2:])
+    while len(x)<7:
+        x="0"+x
+    s+=x
+    return s
+
+def Left_Shift(reg1,Imm):
+    s="01001"
+    s+="0"
+    s+=registers[reg1]
+    Imm=int(Imm)
+    x=str(bin(Imm)[2:])
+    while len(x)<7:
+        x="0"+x
+    s+=x
     return s
 
 def ExclusiveOR(reg1,reg2,reg3):
@@ -123,6 +175,66 @@ def And(reg1,reg2,reg3):
     
     return s
     
+def Invert(reg1,reg2):
+    s="01101"
+    s+="0"*5
+    s+=regiters[reg1]
+    s+=registers[reg2]
+    return s
+
+def Compare(reg1,reg2):
+    s="01110"
+    s+="0"*5
+    s+=regiters[reg1]
+    s+=registers[reg2]
+    return s
+
+def Unconditonal_Jump(Mem_addr):
+    s="01111"
+    s+="0"*4
+    Mem_addr=int(Mem_addr)
+    x=str(bin(Mem_addr)[2:])
+    while len(x)<7:
+        x="0"+x
+    s+=x
+    return s
+
+def Jump_If_Less_Than(Mem_addr):
+    s="11100"
+     s+="0"*4
+    Mem_addr=int(Mem_addr)
+    x=str(bin(Mem_addr)[2:])
+    while len(x)<7:
+        x="0"+x
+    s+=x
+    return s
+
+def Jump_If_Greater_Than(Mem_addr):
+    s="11101"
+    s+="0"*4
+    Mem_addr=int(Mem_addr)
+    x=str(bin(Mem_addr)[2:])
+    while len(x)<7:
+        x="0"+x
+    s+=x
+    return s
+
+def Jump_If_Equal(Mem_addr):
+    s="11111"
+    s+="0"*4
+    Mem_addr=int(Mem_addr)
+    x=str(bin(Mem_addr)[2:])
+    while len(x)<7:
+        x="0"+x
+    s+=x
+    return s
+
+def Halt():
+    s="11010"
+    s+="0"*11
+    return s
+
+
 
 for line in lines:
     line=line.strip().replace("\n","")

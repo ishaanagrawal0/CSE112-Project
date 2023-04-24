@@ -38,7 +38,8 @@ registers={
     "R6":"110",
     "FLAGS":"111"
 }
-dictionary_of_reg_values={  }
+dictionary_of_reg_values={}  #to store the values of the registers in the dictionary
+dictionary_of_reg_binary={}  #to store the binary values of the registers(16 bits)
 #Empty line: Ignore these lines
 #A label
 #An instruction
@@ -56,7 +57,13 @@ def MoveImmediate(reg1,Imm):
         x="0"+x
     s+=x
     return s
-    
+def MoveRegister(reg1,reg2):
+    #format is mov reg1 reg2
+    s="00011"
+    s+="0"*5
+    s+=registers[reg1]
+    s+=registers[reg2]
+    return s
 def Addition(reg1,reg2,reg3):
     #format is reg1=reg2+reg3
     s="00000"
@@ -79,10 +86,17 @@ for line in lines:
     if words[0]=="mov":
         if "$" in words[2]:
             dictionary_of_reg_values[words[1]]=int(words[2][1:])
+            dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
+            while len(dictionary_of_reg_binary[words[1]])<16:
+                dictionary_of_reg_binary[words[1]]="0"+dictionary_of_reg_binary[words[1]]
             print(MoveImmediate(words[1],words[2][1:]))
             
         else:
             dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]
+            dictionary_of_reg_binary[words[1]]=dictionary_of_reg_binary[words[2]]
+            print(MoveRegister(words[1],words[2]))
             
-    
+            
+            
+print(dictionary_of_reg_binary)
     

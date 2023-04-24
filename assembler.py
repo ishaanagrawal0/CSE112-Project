@@ -45,6 +45,17 @@ dictionary_of_reg_values={  }
 #A variable definition
 f1=open(r"C:\Users\adity\Downloads\stdin.txt","r")
 lines=f1.readlines()
+def MoveImmediate(reg1,Imm):
+    #format is mov reg1 $Imm
+    s="00010"
+    Imm=int(Imm)
+    s+="0" #unused bits
+    s+=registers[reg1]
+    x=str(bin(Imm)[2:])
+    while len(x)<7:
+        x="0"+x
+    s+=x
+    return s
     
 def Addition(reg1,reg2,reg3):
     #format is reg1=reg2+reg3
@@ -68,6 +79,10 @@ for line in lines:
     if words[0]=="mov":
         if "$" in words[2]:
             dictionary_of_reg_values[words[1]]=int(words[2][1:])
+            print(MoveImmediate(words[1],words[2][1:]))
+            
         else:
             dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]
+            
+    
     

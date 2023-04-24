@@ -32,7 +32,7 @@ registers={
     "R0":"000",
     "R1":"001",
     "R2":"010",
-    "R3":"011",
+    "R3":"011", 
     "R4":"100",
     "R5":"101",
     "R6":"110",
@@ -178,14 +178,14 @@ def And(reg1,reg2,reg3):
 def Invert(reg1,reg2):
     s="01101"
     s+="0"*5
-    s+=regiters[reg1]
+    s+=registers[reg1]
     s+=registers[reg2]
     return s
 
 def Compare(reg1,reg2):
     s="01110"
     s+="0"*5
-    s+=regiters[reg1]
+    s+=registers[reg1]
     s+=registers[reg2]
     return s
 
@@ -201,7 +201,7 @@ def Unconditonal_Jump(Mem_addr):
 
 def Jump_If_Less_Than(Mem_addr):
     s="11100"
-     s+="0"*4
+    s+="0"*4
     Mem_addr=int(Mem_addr)
     x=str(bin(Mem_addr)[2:])
     while len(x)<7:

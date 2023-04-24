@@ -125,8 +125,24 @@ def And(reg1,reg2,reg3):
     
 
 for line in lines:
-    line=line.replace("\n","")
+    line=line.strip().replace("\n","")
     words=line.split(" ")
+    
+    
+    if words[0]=="mov":
+        if "$" in words[2]:
+            #the $Imm is of 7 bits only thus is should not be more than 127
+            dictionary_of_reg_values[words[1]]=int(words[2][1:])
+            dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
+            dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
+            print(MoveImmediate(words[1],words[2][1:]))
+            
+        else:
+            dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]
+            dictionary_of_reg_binary[words[1]]=dictionary_of_reg_binary[words[2]]
+            print(MoveRegister(words[1],words[2]))
+    
+    #TYPE A COMMANDS
     
     if words[0]=="add":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]+dictionary_of_reg_values[words[3]]
@@ -165,17 +181,10 @@ for line in lines:
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(And(words[1],words[2],words[3]))
-    if words[0]=="mov":
-        if "$" in words[2]:
-            dictionary_of_reg_values[words[1]]=int(words[2][1:])
-            dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
-            dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
-            print(MoveImmediate(words[1],words[2][1:]))
-            
-        else:
-            dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]
-            dictionary_of_reg_binary[words[1]]=dictionary_of_reg_binary[words[2]]
-            print(MoveRegister(words[1],words[2]))
+        
+    
+    
+
     
             
 print(dictionary_of_reg_values)

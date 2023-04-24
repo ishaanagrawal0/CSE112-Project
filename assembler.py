@@ -38,3 +38,27 @@ registers={
     "R6":"110",
     "FLAGS":"111"
 }
+#Empty line: Ignore these lines
+#A label
+#An instruction
+#A variable definition
+f1=open(r"C:\Users\adity\Downloads\stdin.txt","r")
+lines=f1.readlines()
+def Addition(reg1,reg2,reg3):
+    #format is reg1=reg2+reg3
+    s="00000"
+    s+="00"#unused bits
+    s+=registers[reg1]
+    s+=registers[reg2]
+    s+=registers[reg3]
+    
+    return s
+    
+    
+for line in lines:
+    line=line.replace("\n","")
+    words=line.split(" ")
+    if words[0]=="add":
+        print(Addition(words[1],words[2],words[3])+"\n")
+    
+        

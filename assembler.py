@@ -73,30 +73,111 @@ def Addition(reg1,reg2,reg3):
     s+=registers[reg3]
     
     return s
-'''
+
 def Subtraction(reg1,reg2,reg3):
     #format is reg1=reg2-reg3
-'''
+    s="00001"
+    s+="00" #unused bits
+    s+=registers[reg1]
+    s+=registers[reg2]
+    s+=registers[reg3]
+    
+    return s
+def Multiply(reg1,reg2,reg3):
+    #format is reg1=reg2.reg3
+    s="00110"
+    s+="00" #unused bits
+    s+=registers[reg1]
+    s+=registers[reg2]
+    s+=registers[reg3]
+    
+    return s
+
+def ExclusiveOR(reg1,reg2,reg3):
+    #format is reg1=reg2^reg3
+    s="01010"
+    s+="00" #unused bits
+    s+=registers[reg1]
+    s+=registers[reg2]
+    s+=registers[reg3]
+    
+    return s
+
+def Or(reg1,reg2,reg3):
+    #format is reg1=reg2|reg3
+    s="01011"
+    s+="00" #unused bits
+    s+=registers[reg1]
+    s+=registers[reg2]
+    s+=registers[reg3]
+    
+    return s
+
+def And(reg1,reg2,reg3):
+    #format is reg1=reg2|reg3
+    s="01100"
+    s+="00" #unused bits
+    s+=registers[reg1]
+    s+=registers[reg2]
+    s+=registers[reg3]
+    
+    return s
+    
+
 for line in lines:
     line=line.replace("\n","")
     words=line.split(" ")
     
     if words[0]=="add":
-        print(Addition(words[1],words[2],words[3])+"\n")
+        dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]+dictionary_of_reg_values[words[3]]
+        dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
+
+        dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
+        print(Addition(words[1],words[2],words[3]))
+    if words[0]=="sub":
+        dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]-dictionary_of_reg_values[words[3]]
+        dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
+        dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
+        print(Subtraction(words[1],words[2],words[3]))
+
+    if words[0]=="mul":
+        dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]*dictionary_of_reg_values[words[3]]
+        dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
+        dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
+        print(Multiply(words[1],words[2],words[3]))
+        
+    
+    if words[0]=="xor":
+        dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]^dictionary_of_reg_values[words[3]]
+        dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
+        dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
+        print(ExclusiveOR(words[1],words[2],words[3]))
+
+    
+    if words[0]=="or":
+        dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]|dictionary_of_reg_values[words[3]]
+        dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
+        dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
+        print(Or(words[1],words[2],words[3]))
+    
+    if words[0]=="and":
+        dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]&dictionary_of_reg_values[words[3]]
+        dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
+        dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
+        print(And(words[1],words[2],words[3]))
     if words[0]=="mov":
         if "$" in words[2]:
             dictionary_of_reg_values[words[1]]=int(words[2][1:])
             dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
-            while len(dictionary_of_reg_binary[words[1]])<16:
-                dictionary_of_reg_binary[words[1]]="0"+dictionary_of_reg_binary[words[1]]
+            dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
             print(MoveImmediate(words[1],words[2][1:]))
             
         else:
             dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]
             dictionary_of_reg_binary[words[1]]=dictionary_of_reg_binary[words[2]]
             print(MoveRegister(words[1],words[2]))
+    
             
-            
-            
+print(dictionary_of_reg_values)
 print(dictionary_of_reg_binary)
     

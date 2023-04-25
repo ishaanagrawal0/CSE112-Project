@@ -5,6 +5,8 @@ Himang Chandra Garg 2022214
 Ishaan Agrawal 2022221
 '''
 
+import random
+dictionary_of_variables={} #dictionary to store the variables
 operations = {
     'add' : '00000',
     'sub' : '00001',
@@ -40,6 +42,8 @@ registers={
 }
 dictionary_of_reg_values={}  #to store the values of the registers in the dictionary
 dictionary_of_reg_binary={}  #to store the binary values of the registers(16 bits)
+
+list_of_variables=[]
 #Empty line: Ignore these lines
 #A label
 #An instruction
@@ -85,10 +89,11 @@ def Subtraction(reg1,reg2,reg3):
     return s
 
 def Load(reg1,Mem_addr):
+    #format is ld reg1 mem_addr
     s="00100"
     s+="0"
     s+=registers[reg1]
-    Mem_addr=int(Mem_addr)
+    Mem_addr1=dictionary_of_variables[Mem_addr]
     x=str(bin(Mem_addr)[2:])
     while len(x)<7:
         x="0"+x
@@ -240,6 +245,12 @@ for line in lines:
     line=line.strip().replace("\n","")
     words=line.split(" ")
     
+    if words[0]=="var":
+        l=random.randint(0,2**7-1)
+        while l in dictionary_of_variables.values():
+            l=random.randint(0,2**7-1)
+        dictionary_of_variables[words[1]]=l #as the mem_addr is of 7 bits only
+        
     
     if words[0]=="mov":
         if "$" in words[2]:
@@ -293,12 +304,15 @@ for line in lines:
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(And(words[1],words[2],words[3]))
+    
+        
+        
         
     
     
 
     
-            
+print(dictionary_of_variables)
 print(dictionary_of_reg_values)
 print(dictionary_of_reg_binary)
     

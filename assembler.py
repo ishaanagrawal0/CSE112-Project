@@ -270,9 +270,9 @@ for line in lines:
     if words[0]=="add":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]+dictionary_of_reg_values[words[3]]
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
-
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Addition(words[1],words[2],words[3]))
+        
     if words[0]=="sub":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]-dictionary_of_reg_values[words[3]]
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
@@ -285,13 +285,31 @@ for line in lines:
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Multiply(words[1],words[2],words[3]))
         
+    if words[0]=="div":
+        dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[1]]//dictionary_of_reg_values[words[2]]
+        dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
+        dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
+        print(Divide(words[1],words[2]))
+        
+    if words[0]=="rs":
+        i=int(words[2][1:])
+        dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[1]]>>i
+        dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
+        dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
+        print(Right_Shift(words[1],words[2][1:]))
+        
+    if words[0]=="ls":
+        i=int(words[2][1:])
+        dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[1]]<<i
+        dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
+        dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
+        print(Left_Shift(words[1],words[2][1:]))
     
     if words[0]=="xor":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]^dictionary_of_reg_values[words[3]]
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(ExclusiveOR(words[1],words[2],words[3]))
-
     
     if words[0]=="or":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]|dictionary_of_reg_values[words[3]]
@@ -305,7 +323,14 @@ for line in lines:
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(And(words[1],words[2],words[3]))
     
+    if words[0]=="not":
+        dictionary_of_reg_values[words[1]] = ~dictionary_of_reg_values[words[2]]
+        dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
+        dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
+        print(Invert(words[1],words[2]))
         
+    if words[0]=="cmp":
+             
         
         
     

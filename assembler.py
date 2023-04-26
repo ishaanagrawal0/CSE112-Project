@@ -181,10 +181,11 @@ def And(reg1,reg2,reg3):
     return s
     
 def Invert(reg1,reg2):
+    #format is not reg1 reg2
     s="01101"
     s+="0"*5
     s+=registers[reg1]
-    s+=registers[reg2]
+    s+=registers[reg2] 
     return s
 
 def Compare(reg1,reg2):

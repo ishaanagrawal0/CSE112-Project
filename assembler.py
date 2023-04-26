@@ -248,6 +248,8 @@ for line in lines:
     words=line.split(" ")
     if words[0]!="var":
         number_of_instructions+=1
+    if words[0]=="hlt":
+        break
 
 for line in lines:
     line=line.strip().replace("\n","")
@@ -257,7 +259,7 @@ for line in lines:
         l=number_of_instructions #as the first memory addr is 0
         dictionary_of_variables[words[1]]=bin(l)[2:] #as the mem_addr is of 7 bits only
         dictionary_of_variables[words[1]]="0"*(7-len(dictionary_of_variables[words[1]]))+dictionary_of_variables[words[1]]
-        
+        number_of_instructions+=1
     if words[0]=="mov":
         if "$" in words[2]:
             #the $Imm is of 7 bits only thus is should not be more than 127
@@ -340,8 +342,6 @@ for line in lines:
         
         
     
-    
-
     
 print(dictionary_of_variables)
 print(dictionary_of_reg_values)

@@ -52,6 +52,7 @@ list_of_variables=[]
 #A variable definition
 f1=open(r"C:\Users\adity\Downloads\stdin.txt","r")
 lines=f1.readlines()
+
 def MoveImmediate(reg1,Imm):
     #format is mov reg1 $Imm
     s="00010"
@@ -63,6 +64,7 @@ def MoveImmediate(reg1,Imm):
         x="0"+x
     s+=x
     return s
+
 def MoveRegister(reg1,reg2):
     #format is mov reg1 reg2
     s="00011"
@@ -70,6 +72,7 @@ def MoveRegister(reg1,reg2):
     s+=registers[reg1]
     s+=registers[reg2]
     return s
+
 def Addition(reg1,reg2,reg3):
     #format is reg1=reg2+reg3
     s="00000"
@@ -95,22 +98,14 @@ def Load(reg1,Mem_addr):
     s="00100"
     s+="0"
     s+=registers[reg1]
-    Mem_addr1=dictionary_of_variables[Mem_addr]
-    x=str(bin(Mem_addr)[2:])
-    while len(x)<7:
-        x="0"+x
-    s+=x
+    s+=dictionary_of_variables[Mem_addr]
     return s
 
 def Store(reg1,Mem_addr):
     s="00101"
     s+="0"
     s+=registers[reg1]
-    Mem_addr=int(Mem_addr)
-    x=str(bin(Mem_addr)[2:])
-    while len(x)<7:
-        x="0"+x
-    s+=x
+    s+=dictionary_of_variables[Mem_addr]
     return s
 
 def Multiply(reg1,reg2,reg3):
@@ -240,7 +235,11 @@ def Halt():
     s+="0"*11
     return s
 
-
+# Function to check whether the name of register is correct or not
+def check_reg(reg1):
+    if(reg1 in registers) and(reg1!="FLAGS"):
+        return 1
+    return 0
 
 number_of_instructions=0
 for line in lines:
@@ -279,6 +278,16 @@ for line in lines:
             dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]
             dictionary_of_reg_binary[words[1]]=dictionary_of_reg_binary[words[2]]
             print(MoveRegister(words[1],words[2]))
+    
+    elif words[0]="ld":
+        if(words[2] not in dictionary_of_variables):
+            print("Error - Invalid Variable Name")
+        print(Load(words[1],words[2]))
+        
+    elif words[0]=="st":
+        if(words[2] not in dictionary_of_variables):
+            print("Error - Invalid Variable Name")
+        print(Store(words[1],words[2]))
     
     #TYPE A COMMANDS
     
@@ -354,13 +363,13 @@ for line in lines:
         print(Compare(words[1],words[2]))
     
     elif words[0][0]=="j":
-        if(words[0]=="jmp"):
+        if(words[0]=="jmp" and words[1] in dictionary_of_label_addresses_decimal):
             print(Unconditional_Jump(dictionary_of_label_addresses_decimal[words[1]]))
-        elif(words[0]=="jlt"):
+        elif(words[0]=="jlt" and words[1] in dictionary_of_label_addresses_decimal):
             print(Jump_If_Less_Than(dictionary_of_label_addresses_decimal[words[1]]))
-        elif(words[0]=="jgt"):
+        elif(words[0]=="jgt" and words[1] in dictionary_of_label_addresses_decimal):
             print(Jump_If_Greater_Than(dictionary_of_label_addresses_decimal[words[1]]))
-        elif(words[0]=="je):
+        elif(words[0]=="je" and words[1] in dictionary_of_label_addresses_decimal):
             print(Jump_If_Equal(dictionary_of_label_addresses_decimal[words[1]]))
         else:
              print("Syntax Error!")
@@ -373,7 +382,8 @@ for line in lines:
     else:
         print("Syntax Error!")
     
-    
+# Create separate if else blocks to check for valid register names for command types - A,B,C,D
+
 print(dictionary_of_variables)
 print(dictionary_of_reg_values)
 print(dictionary_of_reg_binary)

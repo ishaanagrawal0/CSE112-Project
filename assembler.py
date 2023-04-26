@@ -4,8 +4,6 @@ Debjit Banerji 2022146
 Himang Chandra Garg 2022214
 Ishaan Agrawal 2022221
 '''
-
-import random
 dictionary_of_variables={} #dictionary to store the variables
 operations = {
     'add' : '00000',
@@ -129,17 +127,19 @@ def Divide(reg3,reg4):
     return s
 
 def Right_Shift(reg1,Imm):
-    s="01000"
+    #format is rs reg1 $Imm
+    s="01000"   
     s+="0"
     s+=registers[reg1]
-    Imm=int(Imm)
-    x=str(bin(Imm)[2:])
+    Imm_1=int(Imm)
+    x=str(bin(Imm_1)[2:])
     while len(x)<7:
         x="0"+x
     s+=x
     return s
 
 def Left_Shift(reg1,Imm):
+    #format is ls reg1 $Imm 
     s="01001"
     s+="0"
     s+=registers[reg1]
@@ -195,6 +195,7 @@ def Compare(reg1,reg2):
     return s
 
 def Unconditonal_Jump(Mem_addr):
+    #format is jmp mem_addr
     s="01111"
     s+="0"*4
     Mem_addr=int(Mem_addr)
@@ -241,17 +242,22 @@ def Halt():
 
 
 
+number_of_instructions=0
+for line in lines:
+    line=line.strip().replace("\n","")
+    words=line.split(" ")
+    if words[0]!="var":
+        number_of_instructions+=1
+
 for line in lines:
     line=line.strip().replace("\n","")
     words=line.split(" ")
     
     if words[0]=="var":
-        l=random.randint(0,2**7-1)
-        while l in dictionary_of_variables.values():
-            l=random.randint(0,2**7-1)
-        dictionary_of_variables[words[1]]=l #as the mem_addr is of 7 bits only
+        l=number_of_instructions #as the first memory addr is 0
+        dictionary_of_variables[words[1]]=bin(l)[2:] #as the mem_addr is of 7 bits only
+        dictionary_of_variables[words[1]]="0"*(7-len(dictionary_of_variables[words[1]]))+dictionary_of_variables[words[1]]
         
-    
     if words[0]=="mov":
         if "$" in words[2]:
             #the $Imm is of 7 bits only thus is should not be more than 127
@@ -324,12 +330,12 @@ for line in lines:
         print(And(words[1],words[2],words[3]))
     
     if words[0]=="not":
-        dictionary_of_reg_values[words[1]] = ~dictionary_of_reg_values[words[2]]
+        dictionary_of_reg_values[words[1]] = ~(dictionary_of_reg_values[words[2]])
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Invert(words[1],words[2]))
         
-    if words[0]=="cmp":
+   # if words[0]=="cmp":
              
         
         

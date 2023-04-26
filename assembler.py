@@ -282,11 +282,13 @@ for line in lines:
     elif words[0]="ld":
         if(words[2] not in dictionary_of_variables):
             print("Error - Invalid Variable Name")
+            break
         print(Load(words[1],words[2]))
         
     elif words[0]=="st":
         if(words[2] not in dictionary_of_variables):
             print("Error - Invalid Variable Name")
+            break
         print(Store(words[1],words[2]))
     
     #TYPE A COMMANDS

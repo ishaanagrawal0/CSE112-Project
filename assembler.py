@@ -40,7 +40,10 @@ registers={
 }
 dictionary_of_reg_values={}  #to store the values of the registers in the dictionary
 dictionary_of_reg_binary={}  #to store the binary values of the registers(16 bits)
+
 flags="0"*16
+
+dictionary_of_label_addresses_decimal={}
 
 list_of_variables=[]
 #Empty line: Ignore these lines
@@ -199,7 +202,6 @@ def Unconditonal_Jump(Mem_addr):
     #format is jmp mem_addr
     s="01111"
     s+="0"*4
-    Mem_addr=int(Mem_addr)
     x=str(bin(Mem_addr)[2:])
     while len(x)<7:
         x="0"+x
@@ -209,7 +211,6 @@ def Unconditonal_Jump(Mem_addr):
 def Jump_If_Less_Than(Mem_addr):
     s="11100"
     s+="0"*4
-    Mem_addr=int(Mem_addr)
     x=str(bin(Mem_addr)[2:])
     while len(x)<7:
         x="0"+x
@@ -219,7 +220,6 @@ def Jump_If_Less_Than(Mem_addr):
 def Jump_If_Greater_Than(Mem_addr):
     s="11101"
     s+="0"*4
-    Mem_addr=int(Mem_addr)
     x=str(bin(Mem_addr)[2:])
     while len(x)<7:
         x="0"+x
@@ -229,7 +229,6 @@ def Jump_If_Greater_Than(Mem_addr):
 def Jump_If_Equal(Mem_addr):
     s="11111"
     s+="0"*4
-    Mem_addr=int(Mem_addr)
     x=str(bin(Mem_addr)[2:])
     while len(x)<7:
         x="0"+x
@@ -251,10 +250,16 @@ for line in lines:
         number_of_instructions+=1
     if words[0]=="hlt":
         break
+    if words[0][-1]==":":
+        dictionary_of_label_addresses_decimal[words[:-1]]=number_of_instructions-1
 
 for line in lines:
     line=line.strip().replace("\n","")
     words=line.split(" ")
+    
+    if (f1==1):
+        print("Error - Halt not used as last instruction")
+        break
     
     if words[0]=="var":
         l=number_of_instructions #as the first memory addr is 0
@@ -350,16 +355,23 @@ for line in lines:
     
     elif words[0][0]=="j":
         if(words[0]=="jmp"):
-            print(Unconditional_Jump(words[1]))
+            print(Unconditional_Jump(dictionary_of_label_addresses_decimal[words[1]]))
         elif(words[0]=="jlt"):
-            print(Jump_If_Less_Than(words[1]))
+            print(Jump_If_Less_Than(dictionary_of_label_addresses_decimal[words[1]]))
         elif(words[0]=="jgt"):
-            print(Jump_If_Greater_Than(words[1]))
+            print(Jump_If_Greater_Than(dictionary_of_label_addresses_decimal[words[1]]))
         elif(words[0]=="je):
-            print(Jump_If_Equal(words[1]))
+            print(Jump_If_Equal(dictionary_of_label_addresses_decimal[words[1]]))
+        else:
+             print("Syntax Error!")
+             break
         
     elif words[0]=="hlt":
+        f1=1
         print(Halt())
+         
+    else:
+        print("Syntax Error!")
     
     
 print(dictionary_of_variables)

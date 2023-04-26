@@ -43,6 +43,8 @@ dictionary_of_reg_binary={}  #to store the binary values of the registers(16 bit
 
 flags="0"*16
 
+f1=0 #Flag to check whether halt instruction was read or not
+
 dictionary_of_label_addresses_decimal={}
 
 list_of_variables=[]

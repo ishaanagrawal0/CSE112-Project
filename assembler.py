@@ -41,7 +41,7 @@ registers={
 dictionary_of_reg_values={}  #to store the values of the registers in the dictionary
 dictionary_of_reg_binary={}  #to store the binary values of the registers(16 bits)
 
-flags="0"*16
+flags="0"*16  # initial value of flag is of form 000000000000/0000
 
 halt_finder=0 #Flag to check whether halt instruction was read or not
 
@@ -190,6 +190,7 @@ def Invert(reg1,reg2):
     return s
 
 def Compare(reg1,reg2):
+    #cmp reg1 reg2
     s="01110"
     s+="0"*5
     s+=registers[reg1]
@@ -217,6 +218,7 @@ def Jump_If_Less_Than(Mem_addr):
     return s
 
 def Jump_If_Greater_Than(Mem_addr):
+    #jgt mem_addr
     s="11101"
     s+="0"*4
     x=str(bin(dictionary_of_label_addresses_decimal[Mem_addr])[2:])
@@ -226,6 +228,7 @@ def Jump_If_Greater_Than(Mem_addr):
     return s
 
 def Jump_If_Equal(Mem_addr):
+    #je mem_addr
     s="11111"
     s+="0"*4
     x=str(bin(dictionary_of_label_addresses_decimal[Mem_addr])[2:])
@@ -235,6 +238,7 @@ def Jump_If_Equal(Mem_addr):
     return s
 
 def Halt():
+    #hlt
     s="11010"
     s+="0"*11
     return s
@@ -260,7 +264,7 @@ for line in lines:
     line=line.strip().replace("\n","")
     words=line.split(" ")
     
-    if (halt_finder==1):
+    if (halt_finder==1):  #correct
         print("Error - Halt not used as last instruction")
         break
     
@@ -316,9 +320,12 @@ for line in lines:
         print(Multiply(words[1],words[2],words[3]))
         
     elif words[0]=="div":
-        dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[1]]//dictionary_of_reg_values[words[2]]
-        dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
-        dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
+        dictionary_of_reg_values["R0"]=dictionary_of_reg_values[words[1]]//dictionary_of_reg_values[words[2]]
+        dictionary_of_reg_values["R1"]=dictionary_of_reg_values[words[1]]%dictionary_of_reg_values[words[2]]
+        dictionary_of_reg_binary["R0"]=str(bin(dictionary_of_reg_values["R0"])[2:])
+        dictionary_of_reg_binary["R0"]="0"*(16-len(dictionary_of_reg_binary["R0"]))+dictionary_of_reg_binary[words[1]]
+        dictionary_of_reg_binary["R1"]=str(bin(dictionary_of_reg_values["R1"])[2:])
+        dictionary_of_reg_binary["R1"]="0"*(16-len(dictionary_of_reg_binary["R1"]))+dictionary_of_reg_binary[words[1]]
         print(Divide(words[1],words[2]))
         
     elif words[0]=="rs":
@@ -378,8 +385,8 @@ for line in lines:
         elif(words[0]=="je" and words[1] in dictionary_of_label_addresses_decimal):
             print(Jump_If_Equal(dictionary_of_label_addresses_decimal[words[1]]))
         else:
-             print("Syntax Error!")
-             break
+            print("Syntax Error! Use of undefined labels.")
+            break
         
     elif words[0]=="hlt":
         halt_finder=1

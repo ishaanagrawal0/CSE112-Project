@@ -41,6 +41,12 @@ registers={
 dictionary_of_reg_values={}  #to store the values of the registers in the dictionary
 dictionary_of_reg_binary={}  #to store the binary values of the registers(16 bits)
 
+flags="0"*16
+
+f1=0 #Flag to check whether halt instruction was read or not
+
+dictionary_of_label_addresses_decimal={}
+
 list_of_variables=[]
 #Empty line: Ignore these lines
 #A label
@@ -48,6 +54,7 @@ list_of_variables=[]
 #A variable definition
 f1=open(r"C:\Users\adity\Downloads\stdin.txt","r")
 lines=f1.readlines()
+
 def MoveImmediate(reg1,Imm):
     #format is mov reg1 $Imm
     s="00010"
@@ -59,6 +66,7 @@ def MoveImmediate(reg1,Imm):
         x="0"+x
     s+=x
     return s
+
 def MoveRegister(reg1,reg2):
     #format is mov reg1 reg2
     s="00011"
@@ -66,6 +74,7 @@ def MoveRegister(reg1,reg2):
     s+=registers[reg1]
     s+=registers[reg2]
     return s
+
 def Addition(reg1,reg2,reg3):
     #format is reg1=reg2+reg3
     s="00000"
@@ -91,22 +100,14 @@ def Load(reg1,Mem_addr):
     s="00100"
     s+="0"
     s+=registers[reg1]
-    Mem_addr1=dictionary_of_variables[Mem_addr]
-    x=str(bin(Mem_addr)[2:])
-    while len(x)<7:
-        x="0"+x
-    s+=x
+    s+=dictionary_of_variables[Mem_addr]
     return s
 
 def Store(reg1,Mem_addr):
     s="00101"
     s+="0"
     s+=registers[reg1]
-    Mem_addr=int(Mem_addr)
-    x=str(bin(Mem_addr)[2:])
-    while len(x)<7:
-        x="0"+x
-    s+=x
+    s+=dictionary_of_variables[Mem_addr]
     return s
 
 def Multiply(reg1,reg2,reg3):
@@ -199,7 +200,6 @@ def Unconditonal_Jump(Mem_addr):
     #format is jmp mem_addr
     s="01111"
     s+="0"*4
-    Mem_addr=int(Mem_addr)
     x=str(bin(Mem_addr)[2:])
     while len(x)<7:
         x="0"+x
@@ -209,7 +209,6 @@ def Unconditonal_Jump(Mem_addr):
 def Jump_If_Less_Than(Mem_addr):
     s="11100"
     s+="0"*4
-    Mem_addr=int(Mem_addr)
     x=str(bin(Mem_addr)[2:])
     while len(x)<7:
         x="0"+x
@@ -219,7 +218,6 @@ def Jump_If_Less_Than(Mem_addr):
 def Jump_If_Greater_Than(Mem_addr):
     s="11101"
     s+="0"*4
-    Mem_addr=int(Mem_addr)
     x=str(bin(Mem_addr)[2:])
     while len(x)<7:
         x="0"+x
@@ -229,7 +227,6 @@ def Jump_If_Greater_Than(Mem_addr):
 def Jump_If_Equal(Mem_addr):
     s="11111"
     s+="0"*4
-    Mem_addr=int(Mem_addr)
     x=str(bin(Mem_addr)[2:])
     while len(x)<7:
         x="0"+x
@@ -241,7 +238,11 @@ def Halt():
     s+="0"*11
     return s
 
-
+# Function to check whether the name of register is correct or not
+def check_reg(reg1):
+    if(reg1 in registers) and(reg1!="FLAGS"):
+        return 1
+    return 0
 
 number_of_instructions=0
 for line in lines:
@@ -251,17 +252,24 @@ for line in lines:
         number_of_instructions+=1
     if words[0]=="hlt":
         break
+    if words[0][-1]==":":
+        dictionary_of_label_addresses_decimal[words[:-1]]=number_of_instructions-1
 
 for line in lines:
     line=line.strip().replace("\n","")
     words=line.split(" ")
+    
+    if (f1==1):
+        print("Error - Halt not used as last instruction")
+        break
     
     if words[0]=="var":
         l=number_of_instructions #as the first memory addr is 0
         dictionary_of_variables[words[1]]=bin(l)[2:] #as the mem_addr is of 7 bits only
         dictionary_of_variables[words[1]]="0"*(7-len(dictionary_of_variables[words[1]]))+dictionary_of_variables[words[1]]
         number_of_instructions+=1
-    if words[0]=="mov":
+        
+    elif words[0]=="mov":
         if "$" in words[2]:
             #the $Imm is of 7 bits only thus is should not be more than 127
             dictionary_of_reg_values[words[1]]=int(words[2][1:])
@@ -274,76 +282,113 @@ for line in lines:
             dictionary_of_reg_binary[words[1]]=dictionary_of_reg_binary[words[2]]
             print(MoveRegister(words[1],words[2]))
     
+    elif words[0]="ld":
+        if(words[2] not in dictionary_of_variables):
+            print("Error - Invalid Variable Name")
+            break
+        print(Load(words[1],words[2]))
+        
+    elif words[0]=="st":
+        if(words[2] not in dictionary_of_variables):
+            print("Error - Invalid Variable Name")
+            break
+        print(Store(words[1],words[2]))
+    
     #TYPE A COMMANDS
     
-    if words[0]=="add":
+    elif words[0]=="add":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]+dictionary_of_reg_values[words[3]]
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Addition(words[1],words[2],words[3]))
         
-    if words[0]=="sub":
+    elif words[0]=="sub":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]-dictionary_of_reg_values[words[3]]
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Subtraction(words[1],words[2],words[3]))
 
-    if words[0]=="mul":
+    elif words[0]=="mul":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]*dictionary_of_reg_values[words[3]]
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Multiply(words[1],words[2],words[3]))
         
-    if words[0]=="div":
+    elif words[0]=="div":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[1]]//dictionary_of_reg_values[words[2]]
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Divide(words[1],words[2]))
         
-    if words[0]=="rs":
+    elif words[0]=="rs":
         i=int(words[2][1:])
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[1]]>>i
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Right_Shift(words[1],words[2][1:]))
         
-    if words[0]=="ls":
+    elif words[0]=="ls":
         i=int(words[2][1:])
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[1]]<<i
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Left_Shift(words[1],words[2][1:]))
     
-    if words[0]=="xor":
+    elif words[0]=="xor":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]^dictionary_of_reg_values[words[3]]
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(ExclusiveOR(words[1],words[2],words[3]))
     
-    if words[0]=="or":
+    elif words[0]=="or":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]|dictionary_of_reg_values[words[3]]
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Or(words[1],words[2],words[3]))
     
-    if words[0]=="and":
+    elif words[0]=="and":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]&dictionary_of_reg_values[words[3]]
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(And(words[1],words[2],words[3]))
     
-    if words[0]=="not":
+    elif words[0]=="not":
         dictionary_of_reg_values[words[1]] = ~(dictionary_of_reg_values[words[2]])
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Invert(words[1],words[2]))
         
-   # if words[0]=="cmp":
-             
-        
-        
+    elif words[0]=="cmp":
+        if(dictionary_of_reg_values[words[1]]==dictionary_of_reg_values[words[2]]):
+            flags = flags[:15] + "1"
+        elif(dictionary_of_reg_values[words[1]]>dictionary_of_reg_values[words[2]]):
+            flags = flags[:14] + "1" + flags[15]
+        else:
+            flags = flags[:13] + "1" + flags[14:]
+        print(Compare(words[1],words[2]))
     
+    elif words[0][0]=="j":
+        if(words[0]=="jmp" and words[1] in dictionary_of_label_addresses_decimal):
+            print(Unconditional_Jump(dictionary_of_label_addresses_decimal[words[1]]))
+        elif(words[0]=="jlt" and words[1] in dictionary_of_label_addresses_decimal):
+            print(Jump_If_Less_Than(dictionary_of_label_addresses_decimal[words[1]]))
+        elif(words[0]=="jgt" and words[1] in dictionary_of_label_addresses_decimal):
+            print(Jump_If_Greater_Than(dictionary_of_label_addresses_decimal[words[1]]))
+        elif(words[0]=="je" and words[1] in dictionary_of_label_addresses_decimal):
+            print(Jump_If_Equal(dictionary_of_label_addresses_decimal[words[1]]))
+        else:
+             print("Syntax Error!")
+             break
+        
+    elif words[0]=="hlt":
+        f1=1
+        print(Halt())
+         
+    else:
+        print("Syntax Error!")
     
+# Create separate if else blocks to check for valid register names for command types - A,B,C,D
+
 print(dictionary_of_variables)
 print(dictionary_of_reg_values)
 print(dictionary_of_reg_binary)

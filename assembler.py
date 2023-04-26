@@ -40,6 +40,7 @@ registers={
 }
 dictionary_of_reg_values={}  #to store the values of the registers in the dictionary
 dictionary_of_reg_binary={}  #to store the binary values of the registers(16 bits)
+flags="0"*16
 
 list_of_variables=[]
 #Empty line: Ignore these lines
@@ -260,7 +261,8 @@ for line in lines:
         dictionary_of_variables[words[1]]=bin(l)[2:] #as the mem_addr is of 7 bits only
         dictionary_of_variables[words[1]]="0"*(7-len(dictionary_of_variables[words[1]]))+dictionary_of_variables[words[1]]
         number_of_instructions+=1
-    if words[0]=="mov":
+        
+    elif words[0]=="mov":
         if "$" in words[2]:
             #the $Imm is of 7 bits only thus is should not be more than 127
             dictionary_of_reg_values[words[1]]=int(words[2][1:])
@@ -275,72 +277,89 @@ for line in lines:
     
     #TYPE A COMMANDS
     
-    if words[0]=="add":
+    elif words[0]=="add":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]+dictionary_of_reg_values[words[3]]
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Addition(words[1],words[2],words[3]))
         
-    if words[0]=="sub":
+    elif words[0]=="sub":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]-dictionary_of_reg_values[words[3]]
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Subtraction(words[1],words[2],words[3]))
 
-    if words[0]=="mul":
+    elif words[0]=="mul":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]*dictionary_of_reg_values[words[3]]
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Multiply(words[1],words[2],words[3]))
         
-    if words[0]=="div":
+    elif words[0]=="div":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[1]]//dictionary_of_reg_values[words[2]]
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Divide(words[1],words[2]))
         
-    if words[0]=="rs":
+    elif words[0]=="rs":
         i=int(words[2][1:])
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[1]]>>i
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Right_Shift(words[1],words[2][1:]))
         
-    if words[0]=="ls":
+    elif words[0]=="ls":
         i=int(words[2][1:])
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[1]]<<i
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Left_Shift(words[1],words[2][1:]))
     
-    if words[0]=="xor":
+    elif words[0]=="xor":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]^dictionary_of_reg_values[words[3]]
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(ExclusiveOR(words[1],words[2],words[3]))
     
-    if words[0]=="or":
+    elif words[0]=="or":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]|dictionary_of_reg_values[words[3]]
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Or(words[1],words[2],words[3]))
     
-    if words[0]=="and":
+    elif words[0]=="and":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]&dictionary_of_reg_values[words[3]]
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(And(words[1],words[2],words[3]))
     
-    if words[0]=="not":
+    elif words[0]=="not":
         dictionary_of_reg_values[words[1]] = ~(dictionary_of_reg_values[words[2]])
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Invert(words[1],words[2]))
         
-   # if words[0]=="cmp":
-             
+    elif words[0]=="cmp":
+        if(dictionary_of_reg_values[words[1]]==dictionary_of_reg_values[words[2]]):
+            flags = flags[:15] + "1"
+        elif(dictionary_of_reg_values[words[1]]>dictionary_of_reg_values[words[2]]):
+            flags = flags[:14] + "1" + flags[15]
+        else:
+            flags = flags[:13] + "1" + flags[14:]
+        print(Compare(words[1],words[2]))
+    
+    elif words[0][0]=="j":
+        if(words[0]=="jmp"):
+            print(Unconditional_Jump(words[1]))
+        elif(words[0]=="jlt"):
+            print(Jump_If_Less_Than(words[1]))
+        elif(words[0]=="jgt"):
+            print(Jump_If_Greater_Than(words[1]))
+        elif(words[0]=="je):
+            print(Jump_If_Equal(words[1]))
         
-        
+    elif words[0]=="hlt":
+        print(Halt())
     
     
 print(dictionary_of_variables)

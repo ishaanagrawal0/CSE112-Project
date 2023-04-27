@@ -45,6 +45,7 @@ flags="0"*16  # initial value of flag is of form 000000000000/0000
 
 halt_finder=0 #Flag to check whether halt instruction was read or not
 
+MAX_INT=(2**16-1)
 dictionary_of_label_addresses_decimal={}
 
 list_of_variables=[]
@@ -303,23 +304,44 @@ for line in lines:
     
     elif words[0]=="add":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]+dictionary_of_reg_values[words[3]]
+        if  dictionary_of_reg_values[words[1]]>(MAX_INT):
+            dictionary_of_reg_values[words[1]]=0
+            flags="0"*(12)+"1"+"0"*(3)
+        else:
+            flags="0"*16 # reset to zero
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Addition(words[1],words[2],words[3]))
         
     elif words[0]=="sub":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]-dictionary_of_reg_values[words[3]]
+        if dictionary_of_reg_values[words[1]]<0:
+            dictionary_of_reg_values[words[1]]=0
+            flags="0"*(12)+"1"+"0"*(3)
+        else:
+            flags="0"*16 # reset to zero
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Subtraction(words[1],words[2],words[3]))
 
     elif words[0]=="mul":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]*dictionary_of_reg_values[words[3]]
+        if  dictionary_of_reg_values[words[1]]>(MAX_INT):
+            dictionary_of_reg_values[words[1]]=0
+            flags="0"*(12)+"1"+"0"*(3)
+        else:
+            flags="0"*16 # reset to zero
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Multiply(words[1],words[2],words[3]))
         
     elif words[0]=="div":
+        if dictionary_of_reg_values[words[2]]==0:
+            dictionary_of_reg_values["R0"]=0
+            dictionary_of_reg_values["R1"]=0
+            flags="0"*(12)+"1"+"0"*(3)
+        else:
+            flags="0"*16
         dictionary_of_reg_values["R0"]=dictionary_of_reg_values[words[1]]//dictionary_of_reg_values[words[2]]
         dictionary_of_reg_values["R1"]=dictionary_of_reg_values[words[1]]%dictionary_of_reg_values[words[2]]
         dictionary_of_reg_binary["R0"]=str(bin(dictionary_of_reg_values["R0"])[2:])
@@ -368,22 +390,23 @@ for line in lines:
         
     elif words[0]=="cmp":
         if(dictionary_of_reg_values[words[1]]==dictionary_of_reg_values[words[2]]):
-            flags = flags[:15] + "1"
+            flags = "0"*15 + "1"
         elif(dictionary_of_reg_values[words[1]]>dictionary_of_reg_values[words[2]]):
-            flags = flags[:14] + "1" + flags[15]
+            flags = "0"*14 + "1" + "0"
         else:
-            flags = flags[:13] + "1" + flags[14:]
+            flags = "0"*13 + "1" + "0"*2
         print(Compare(words[1],words[2]))
     
     elif words[0][0]=="j":
         if(words[0]=="jmp" and words[1] in dictionary_of_label_addresses_decimal):
             print(Unconditonal_Jump(dictionary_of_label_addresses_decimal[words[1]]))
-        elif(words[0]=="jlt" and words[1] in dictionary_of_label_addresses_decimal):
-            print(Jump_If_Less_Than(dictionary_of_label_addresses_decimal[words[1]]))
-        elif(words[0]=="jgt" and words[1] in dictionary_of_label_addresses_decimal):
+        elif(words[0]=="jlt") and (words[1] in dictionary_of_label_addresses_decimal) and flags[13]==1:
+            print(Jump_If_Less_Than(dictionary_of_label_addresses_decimal[words[1]]))   
+        elif(words[0]=="jgt") and (words[1] in dictionary_of_label_addresses_decimal) and flags[14]==1:
             print(Jump_If_Greater_Than(dictionary_of_label_addresses_decimal[words[1]]))
-        elif(words[0]=="je" and words[1] in dictionary_of_label_addresses_decimal):
+        elif(words[0]=="je") and (words[1] in dictionary_of_label_addresses_decimal) and flags[15]==1:
             print(Jump_If_Equal(dictionary_of_label_addresses_decimal[words[1]]))
+            
         else:
             print("Syntax Error! Use of undefined labels.")
             break

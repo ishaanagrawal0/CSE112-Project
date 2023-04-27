@@ -252,23 +252,58 @@ def check_reg(reg1):
     return 0
 
 number_of_instructions=0
+normal_instruction_flag=0
+
 for line in lines:
     line=line.strip().replace("\n","")
     words=line.split(" ")
+    
     if words[0]!="var":
+        normal_instruction_flag=1
         number_of_instructions+=1
+    else:
+        if(words[0]=="var" and normal_instruction_flag==1):
+            print("Error - All variables not declared at the beginning! (Line No.: "+str(number_of_instructions)+")")    
+        
+        
     if words[0]=="hlt":
         break
+        
     if words[0][-1]==":":
         dictionary_of_label_addresses_decimal[words[0][:-1]] =number_of_instructions-1
+        
 print(lines)
+
+i=0 # Line counter
 for line in lines:
     line=line.strip().replace("\n","")
     words=line.split(" ")
     
     if (halt_finder==1):  #correct
-        print("Error - Halt not used as last instruction")
-        break
+        print("Error - Halt not used as last instruction (Line No.: "+str(i)+")")
+        
+    
+    if words[0] in ["add","sub","mul","xor","or","and"]:
+       if(not(check_reg(words[1])) and not(check_reg(words[2])) and not(check_reg(words[3]))):
+        print("Error - Use of invalid register(s) (Line No.: "+str(i)+")")
+        i+=1
+        continue
+    elif words[0] in ["rs","ls"]:
+        if(not(check_reg(words[1]))):
+            print("Error - Use of invalid register(s) (Line No.: "+str(i)+")")
+            i+=1
+            continue
+    elif words[0] in ["div","not","cmp"]:
+        if(not(check_reg(words[1])) and not(check_reg(words[2]))):
+            print("Error - Use of invalid register(s) (Line No.: "+str(i)+")")
+            i+=1
+            continue
+    elif words[0] in ["ld","st"]:
+        if(not(check_reg(words[1]))):
+            print("Error - Use of invalid register(s) (Line No.: "+str(i)+")")
+            i+=1
+            continue
+        
     
     if words[0]=="var":
         l=number_of_instructions #as the first memory addr is 0
@@ -278,16 +313,22 @@ for line in lines:
         
     elif words[0]=="mov":
         if "$" in words[2]:
-            #the $Imm is of 7 bits only thus is should not be more than 127
-            dictionary_of_reg_values[words[1]]=int(words[2][1:])
-            dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
-            dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
-            print(MoveImmediate(words[1],words[2][1:]))
+            if check_reg(words[1]):
+                #the $Imm is of 7 bits only thus is should not be more than 127
+                dictionary_of_reg_values[words[1]]=int(words[2][1:])
+                dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
+                dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
+                print(MoveImmediate(words[1],words[2][1:]))
+            else:
+                print("Error - Use of invalid register! (Line No.: "+str(i)+")")              
             
         else:
-            dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]
-            dictionary_of_reg_binary[words[1]]=dictionary_of_reg_binary[words[2]]
-            print(MoveRegister(words[1],words[2]))
+            if (check_reg(words[1]) and check_reg(words[2])):
+                dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]
+                dictionary_of_reg_binary[words[1]]=dictionary_of_reg_binary[words[2]]
+                print(MoveRegister(words[1],words[2]))
+            else:
+                print("Error - Use of invalid register! (Line No.: "+str(i)+")")
     
     elif words[0]=="ld":
         if(words[2] not in dictionary_of_variables):
@@ -413,20 +454,22 @@ for line in lines:
             print(Jump_If_Equal(words[1]))
             
         else:
-            print("Syntax Error! Use of undefined labels.")
-            break
+            print("Error - Use of undefined labels! (Line No.: "+str(i)+")")
         
     elif words[0]=="hlt":
         halt_finder=1
-        print(Halt())
-    
+        print(Halt())  
     
     elif ":" in words[0]:
-        lines.append(words[1])
-    
+        lines.insert(i+1,words[1:])    
          
     else:
         print("Syntax Error!")
+
+    i+=1
+
+if halt_finder!=1:
+    print("Error - Halt Instruction missing in the code")
     
 # Create separate if else blocks to check for valid register names for command types - A,B,C,D
 

@@ -421,6 +421,9 @@ for line in lines:
         print(Halt())
     
     
+    elif ":" in words[0]:
+        lines.append(words[1])
+    
          
     else:
         print("Syntax Error!")

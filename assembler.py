@@ -4,6 +4,7 @@ Debjit Banerji 2022146
 Himang Chandra Garg 2022214
 Ishaan Agrawal 2022221
 '''
+
 dictionary_of_variables={} #dictionary to store the variables
 operations = {
     'add' : '00000',
@@ -259,8 +260,8 @@ for line in lines:
     if words[0]=="hlt":
         break
     if words[0][-1]==":":
-        dictionary_of_label_addresses_decimal[words[:-1]]=number_of_instructions-1
-
+        dictionary_of_label_addresses_decimal[words[0][:-1]] =number_of_instructions-1
+print(lines)
 for line in lines:
     line=line.strip().replace("\n","")
     words=line.split(" ")
@@ -292,12 +293,16 @@ for line in lines:
         if(words[2] not in dictionary_of_variables):
             print("Error - Invalid Variable Name")
             break
+        dictionary_of_reg_values[words[1]]=0 #storing the default value to 0 for loading from a memory location
         print(Load(words[1],words[2]))
         
     elif words[0]=="st":
         if(words[2] not in dictionary_of_variables):
             print("Error - Invalid Variable Name")
             break
+        if words[1] not in dictionary_of_reg_values:
+            dictionary_of_reg_values[words[1]]=0
+    
         print(Store(words[1],words[2]))
     
     #TYPE A COMMANDS
@@ -399,13 +404,13 @@ for line in lines:
     
     elif words[0][0]=="j":
         if(words[0]=="jmp" and words[1] in dictionary_of_label_addresses_decimal):
-            print(Unconditonal_Jump(dictionary_of_label_addresses_decimal[words[1]]))
+            print(Unconditonal_Jump(words[1]))   
         elif(words[0]=="jlt") and (words[1] in dictionary_of_label_addresses_decimal) and flags[13]==1:
             print(Jump_If_Less_Than(dictionary_of_label_addresses_decimal[words[1]]))   
         elif(words[0]=="jgt") and (words[1] in dictionary_of_label_addresses_decimal) and flags[14]==1:
-            print(Jump_If_Greater_Than(dictionary_of_label_addresses_decimal[words[1]]))
+            print(Jump_If_Greater_Than(words[1]))
         elif(words[0]=="je") and (words[1] in dictionary_of_label_addresses_decimal) and flags[15]==1:
-            print(Jump_If_Equal(dictionary_of_label_addresses_decimal[words[1]]))
+            print(Jump_If_Equal(words[1]))
             
         else:
             print("Syntax Error! Use of undefined labels.")
@@ -414,6 +419,8 @@ for line in lines:
     elif words[0]=="hlt":
         halt_finder=1
         print(Halt())
+    
+    
          
     else:
         print("Syntax Error!")
@@ -421,6 +428,7 @@ for line in lines:
 # Create separate if else blocks to check for valid register names for command types - A,B,C,D
 
 print(dictionary_of_variables)
+print(dictionary_of_label_addresses_decimal)
 print(dictionary_of_reg_values)
 print(dictionary_of_reg_binary)
     

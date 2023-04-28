@@ -272,10 +272,9 @@ for line in lines:
     if words[0][-1]==":":
         dictionary_of_label_addresses_decimal[words[0][:-1]] =number_of_instructions-1
         
-print(lines)
-
 i=0 # Line counter
 for line in lines:
+    #print(type(line))
     line=line.strip().replace("\n","")
     words=line.split(" ")
     
@@ -461,7 +460,7 @@ for line in lines:
         print(Halt())  
     
     elif ":" in words[0]:
-        lines.insert(i+1,words[1:])    
+        lines.insert(i+1,words[1])    
          
     else:
         print("Syntax Error!")

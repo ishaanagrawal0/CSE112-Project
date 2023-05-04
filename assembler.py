@@ -54,8 +54,9 @@ list_of_variables=[]
 #A label
 #An instruction
 #A variable definition
-f1=open(r"C:\Users\adity\Downloads\stdin.txt","r")
+f1=open(r"stdin.txt","r")
 lines=f1.readlines()
+f1.close()
 
 def MoveImmediate(reg1,Imm):
     #format is mov reg1 $Imm
@@ -254,6 +255,8 @@ def check_reg(reg1):
 number_of_instructions=0
 normal_instruction_flag=0
 
+f2 = open("stdout.txt","w")
+
 for line in lines:
     line=line.strip().replace("\n","")
     words=line.split(" ")
@@ -318,6 +321,7 @@ for line in lines:
                 dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
                 dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
                 print(MoveImmediate(words[1],words[2][1:]))
+                f2.write(MoveImmediate(words[1],words[2][1:]))
             else:
                 print("Error - Use of invalid register! (Line No.: "+str(i)+")")              
             
@@ -326,6 +330,7 @@ for line in lines:
                 dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]
                 dictionary_of_reg_binary[words[1]]=dictionary_of_reg_binary[words[2]]
                 print(MoveRegister(words[1],words[2]))
+                f2.write(MoveRegister(words[1],words[2]))
             else:
                 print("Error - Use of invalid register! (Line No.: "+str(i)+")")
     
@@ -335,6 +340,7 @@ for line in lines:
             break
         dictionary_of_reg_values[words[1]]=0 #storing the default value to 0 for loading from a memory location
         print(Load(words[1],words[2]))
+        f2.write(Load(words[1],words[2]))
         
     elif words[0]=="st":
         if(words[2] not in dictionary_of_variables):
@@ -344,6 +350,7 @@ for line in lines:
             dictionary_of_reg_values[words[1]]=0
     
         print(Store(words[1],words[2]))
+        f2.write(Store(words[1],words[2]))
     
     #TYPE A COMMANDS
     
@@ -357,6 +364,7 @@ for line in lines:
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Addition(words[1],words[2],words[3]))
+        f2.write(Addition(words[1],words[2],words[3]))
         
     elif words[0]=="sub":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]-dictionary_of_reg_values[words[3]]
@@ -368,6 +376,7 @@ for line in lines:
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Subtraction(words[1],words[2],words[3]))
+        f2.write(Subtraction(words[1],words[2],words[3]))
 
     elif words[0]=="mul":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]*dictionary_of_reg_values[words[3]]
@@ -379,6 +388,7 @@ for line in lines:
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Multiply(words[1],words[2],words[3]))
+        f2.write(Multiply(words[1],words[2],words[3]))
         
     elif words[0]=="div":
         if dictionary_of_reg_values[words[2]]==0:

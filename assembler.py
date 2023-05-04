@@ -404,6 +404,7 @@ for line in lines:
         dictionary_of_reg_binary["R1"]=str(bin(dictionary_of_reg_values["R1"])[2:])
         dictionary_of_reg_binary["R1"]="0"*(16-len(dictionary_of_reg_binary["R1"]))+dictionary_of_reg_binary[words[1]]
         print(Divide(words[1],words[2]))
+        f2.write(Divide(words[1],words[2]))
         
     elif words[0]=="rs":
         i=int(words[2][1:])
@@ -411,6 +412,7 @@ for line in lines:
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Right_Shift(words[1],words[2][1:]))
+        f2.write(Right_Shift(words[1],words[2][1:]))
         
     elif words[0]=="ls":
         i=int(words[2][1:])
@@ -418,6 +420,7 @@ for line in lines:
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Left_Shift(words[1],words[2][1:]))
+        f2.write(Left_Shift(words[1],words[2][1:]))
     
     elif words[0]=="xor":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]^dictionary_of_reg_values[words[3]]

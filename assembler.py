@@ -427,24 +427,28 @@ for line in lines:
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(ExclusiveOR(words[1],words[2],words[3]))
+        f2.write(ExclusiveOR(words[1],words[2],words[3]))
     
     elif words[0]=="or":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]|dictionary_of_reg_values[words[3]]
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Or(words[1],words[2],words[3]))
+        f2.write(Or(words[1],words[2],words[3]))
     
     elif words[0]=="and":
         dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]&dictionary_of_reg_values[words[3]]
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(And(words[1],words[2],words[3]))
+        f2.write(And(words[1],words[2],words[3]))
     
     elif words[0]=="not":
         dictionary_of_reg_values[words[1]] = ~(dictionary_of_reg_values[words[2]])
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Invert(words[1],words[2]))
+        f2.write(Invert(words[1],words[2]))
         
     elif words[0]=="cmp":
         if(dictionary_of_reg_values[words[1]]==dictionary_of_reg_values[words[2]]):
@@ -454,6 +458,7 @@ for line in lines:
         else:
             flags = "0"*13 + "1" + "0"*2
         print(Compare(words[1],words[2]))
+        f2.write(Compare(words[1],words[2]))
     
     elif words[0][0]=="j":
         if(words[0]=="jmp" and words[1] in dictionary_of_label_addresses_decimal):
@@ -464,6 +469,7 @@ for line in lines:
             print(Jump_If_Greater_Than(words[1]))
         elif(words[0]=="je") and (words[1] in dictionary_of_label_addresses_decimal) and flags[15]==1:
             print(Jump_If_Equal(words[1]))
+            f2.write(Jump_If_Equal(words[1]))
             
         else:
             print("Error - Use of undefined labels! (Line No.: "+str(i)+")")

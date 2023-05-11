@@ -482,11 +482,11 @@ for line in lines:
     elif words[0][0]=="j":
         if(words[0]=="jmp" and words[1] in dictionary_of_label_addresses_decimal):
             print(Unconditonal_Jump(words[1]))   
-        elif(words[0]=="jlt") and (words[1] in dictionary_of_label_addresses_decimal) and flags[13]==1:
+        elif(words[0]=="jlt") and (words[1] in dictionary_of_label_addresses_decimal) :#and flags[13]==1:
             print(Jump_If_Less_Than(dictionary_of_label_addresses_decimal[words[1]]))   
-        elif(words[0]=="jgt") and (words[1] in dictionary_of_label_addresses_decimal) and flags[14]==1:
+        elif(words[0]=="jgt") and (words[1] in dictionary_of_label_addresses_decimal) :#and flags[14]==1:
             print(Jump_If_Greater_Than(words[1]))
-        elif(words[0]=="je") and (words[1] in dictionary_of_label_addresses_decimal) and flags[15]==1:
+        elif(words[0]=="je") and (words[1] in dictionary_of_label_addresses_decimal) :#and flags[15]==1:
             print(Jump_If_Equal(words[1]))
             f2.write(Jump_If_Equal(words[1]))
             f2.write("\n")

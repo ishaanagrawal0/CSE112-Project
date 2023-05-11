@@ -64,9 +64,13 @@ def MoveImmediate(reg1,Imm):
     s+="0" #unused bits
     s+=registers[reg1]
     x=str(bin(Imm)[2:])
+    if len(x)>7:
+        print(f"ERROR-the immediate value has more than 7 bits-line no.{i}")
     while len(x)<7:
         x="0"+x
     s+=x
+    if len(x)>7:
+        s=""
     return s
 
 def MoveRegister(reg1,reg2):
@@ -274,9 +278,11 @@ for line in lines:
         
 i=0 # Line counter
 for line in lines:
-    #print(type(line))
-    line=line.strip().replace("\n","")
-    words=line.split(" ")
+    print(line)
+    line = line.strip().replace("\n", "")
+    words = line.split()  # Splitting without specifying a delimiter to split on whitespace
+    # Rest of your code to process the words
+
     
     if (halt_finder==1):  #correct
         print("Error - Halt not used as last instruction (Line No.: "+str(i)+")")
@@ -460,7 +466,12 @@ for line in lines:
         print(Halt())  
     
     elif ":" in words[0]:
-        lines.insert(i+1,words[1])    
+        s=words[1:]
+        s1=""
+        for x in s:
+            s1=s1+x+" "
+        lines.insert(i + 1, s1)
+   
          
     else:
         print("Syntax Error!")

@@ -68,8 +68,8 @@ def MoveImmediate(reg1,Imm):
     while len(x)<7:
         x="0"+x
     s+=x
-    if len(x)>7:
-        s=f"ERROR-the immediate value has more than 7 bits-(line no.{i})"
+    #if len(x)>7:
+    #    s=f"ERROR-the immediate value has more than 7 bits-(line no.{i})"
     return s
 
 def MoveRegister(reg1,reg2):
@@ -324,9 +324,11 @@ for line in lines:
                 dictionary_of_reg_values[words[1]]=int(words[2][1:])
                 dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
                 dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
-                print(MoveImmediate(words[1],words[2][1:]))
-                f2.write(MoveImmediate(words[1],words[2][1:]))
-                f2.write("\n")
+                var = MoveImmediate(words[1],words[2][1:])
+                print(var)
+                if var[0:5] != 'ERROR':
+                    f2.write(var)
+                    f2.write("\n")
             else:
                 print("Error - Use of invalid register! (Line No.: "+str(i)+")")              
             

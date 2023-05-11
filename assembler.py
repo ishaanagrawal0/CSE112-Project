@@ -65,13 +65,11 @@ def MoveImmediate(reg1,Imm):
     s+="0" #unused bits
     s+=registers[reg1]
     x=str(bin(Imm)[2:])
-    if len(x)>7:
-        print(f"ERROR-the immediate value has more than 7 bits-line no.{i}")
     while len(x)<7:
         x="0"+x
     s+=x
     if len(x)>7:
-        s=""
+        s=f"ERROR-the immediate value has more than 7 bits-(line no.{i})"
     return s
 
 def MoveRegister(reg1,reg2):
@@ -281,7 +279,7 @@ for line in lines:
         
 i=0 # Line counter
 for line in lines:
-    print(line)
+    #sprint(line)
     line = line.strip().replace("\n", "")
     words = line.split()  # Splitting without specifying a delimiter to split on whitespace
     # Rest of your code to process the words

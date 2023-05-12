@@ -18,9 +18,9 @@ operations = {
     'rs' : '01000',
     'ls' : '01001',
     'xor' : '01010',
-    'or':'01011',
+    'or': '01011',
     'and' : '01100',
-    'not':'01101',
+    'not': '01101',
     'cmp' : '01110',
     'jmp' : '01111',
     'jlt' : '11100',
@@ -30,14 +30,14 @@ operations = {
 }
 #7 registers and one flag register we have in the question
 registers={
-    "R0":"000",
-    "R1":"001",
-    "R2":"010",
-    "R3":"011", 
-    "R4":"100",
-    "R5":"101",
-    "R6":"110",
-    "FLAGS":"111"
+    "R0": "000",
+    "R1": "001",
+    "R2": "010",
+    "R3": "011", 
+    "R4": "100",
+    "R5": "101",
+    "R6": "110",
+    "FLAGS": "111"
 }
 dictionary_of_reg_values={}  #to store the values of the registers in the dictionary
 dictionary_of_reg_binary={}  #to store the binary values of the registers(16 bits)
@@ -507,8 +507,7 @@ for line in lines:
         for x in s:
             s1=s1+x+" "
         lines.insert(i + 1, s1)
-   
-         
+    
     else:
         print("Syntax Error!")
 

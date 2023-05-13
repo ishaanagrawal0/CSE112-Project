@@ -66,7 +66,6 @@ def Addition(reg1,reg2,reg3):
     s+=registers[reg1]
     s+=registers[reg2]
     s+=registers[reg3]
-    
     return s
 
 def Subtraction(reg1,reg2,reg3):
@@ -76,7 +75,6 @@ def Subtraction(reg1,reg2,reg3):
     s+=registers[reg1]
     s+=registers[reg2]
     s+=registers[reg3]
-    
     return s
 
 def Multiply(reg1,reg2,reg3):
@@ -141,7 +139,6 @@ def ExclusiveOR(reg1,reg2,reg3):
     s+=registers[reg1]
     s+=registers[reg2]
     s+=registers[reg3]
-    
     return s
 
 def Or(reg1,reg2,reg3):
@@ -151,7 +148,6 @@ def Or(reg1,reg2,reg3):
     s+=registers[reg1]
     s+=registers[reg2]
     s+=registers[reg3]
-    
     return s
 
 def And(reg1,reg2,reg3):
@@ -240,18 +236,14 @@ for line in lines:
     line=" ".join(line.split())
     line=line.strip().replace("\n","")
     words=line.split(" ")
-    
     if words[0]!="var":
         normal_instruction_flag=1
         number_of_instructions+=1
     else:
         if(words[0]=="var" and normal_instruction_flag==1):
             print("Error - All variables not declared at the beginning! (Line No.: "+str(number_of_instructions)+")")    
-        
-        
     if words[0]=="hlt":
         break
-        
     if words[0][-1]==":":
         dictionary_of_label_addresses_decimal[words[0][:-1]] =number_of_instructions-1
         
@@ -485,10 +477,8 @@ for line in lines:
         for x in s:
             s1=s1+x+" "
         lines.insert(i + 1, s1)
-    
     else:
         print("Syntax Error!")
-
     i+=1
 
 if halt_finder!=1:

@@ -33,7 +33,7 @@ list_of_variables=[]
 #A label
 #An instruction
 #A variable definition
-f1=open(r"C:\Users\adity\Downloads\stdin.txt","r")
+f1=open(r"stdin.txt","r")
 lines=f1.readlines()
 f1.close()
 

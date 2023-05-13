@@ -33,7 +33,7 @@ list_of_variables=[]
 #A label
 #An instruction
 #A variable definition
-f1=open(r"stdin.txt","r")
+f1=open(r"C:\Users\adity\Downloads\stdin.txt","r")
 lines=f1.readlines()
 f1.close()
 
@@ -239,6 +239,7 @@ normal_instruction_flag=0
 f2 = open("stdout.txt","w")
 
 for line in lines:
+    line=" ".join(line.split())
     line=line.strip().replace("\n","")
     words=line.split(" ")
     

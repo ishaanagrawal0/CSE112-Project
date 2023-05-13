@@ -79,6 +79,22 @@ def Subtraction(reg1,reg2,reg3):
     
     return s
 
+def Multiply(reg1,reg2,reg3):
+    #format is reg1=reg2.reg3
+    s="00110"
+    s+="00" #unused bits
+    s+=registers[reg1]
+    s+=registers[reg2]
+    s+=registers[reg3]
+    return s
+
+def Divide(reg3,reg4):
+    s="00111"
+    s+="0"*5
+    s+=registers[reg3]
+    s+=registers[reg4]
+    return s
+
 def Load(reg1,Mem_addr):
     #format is ld reg1 mem_addr
     s="00100"
@@ -92,23 +108,6 @@ def Store(reg1,Mem_addr):
     s+="0"
     s+=registers[reg1]
     s+=dictionary_of_variables[Mem_addr]
-    return s
-
-def Multiply(reg1,reg2,reg3):
-    #format is reg1=reg2.reg3
-    s="00110"
-    s+="00" #unused bits
-    s+=registers[reg1]
-    s+=registers[reg2]
-    s+=registers[reg3]
-    
-    return s
-
-def Divide(reg3,reg4):
-    s="00111"
-    s+="0"*5
-    s+=registers[reg3]
-    s+=registers[reg4]
     return s
 
 def Right_Shift(reg1,Imm):

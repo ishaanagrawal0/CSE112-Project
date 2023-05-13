@@ -232,7 +232,21 @@ normal_instruction_flag=0
 
 f2 = open("stdout.txt","w")
 
- 
+for line in lines:
+    line=" ".join(line.split())
+    line=line.strip().replace("\n","")
+    words=line.split(" ")
+    if words[0]!="var":
+        normal_instruction_flag=1
+        number_of_instructions+=1
+    else:
+        if(words[0]=="var" and normal_instruction_flag==1):
+            print("Error - All variables not declared at the beginning! (Line No.: "+str(number_of_instructions)+")")    
+    if words[0]=="hlt":
+        break
+    if words[0][-1]==":":
+        dictionary_of_label_addresses_decimal[words[0][:-1]] =number_of_instructions-1
+        
 i=0 # Line counter
 for line in lines:
     #sprint(line)
@@ -243,9 +257,27 @@ for line in lines:
     
     if (halt_finder==1):  #correct
         print("Error - Halt not used as last instruction (Line No.: "+str(i)+")")
-        
-    
-
+     
+    if words[0] in ["add","sub","mul","xor","or","and"]:
+       if(not(check_reg(words[1])) and not(check_reg(words[2])) and not(check_reg(words[3]))):
+        print("Error - Use of invalid register(s) (Line No.: "+str(i)+")")
+        i+=1
+        continue
+    elif words[0] in ["rs","ls"]:
+        if(not(check_reg(words[1]))):
+            print("Error - Use of invalid register(s) (Line No.: "+str(i)+")")
+            i+=1
+            continue
+    elif words[0] in ["div","not","cmp"]:
+        if(not(check_reg(words[1])) and not(check_reg(words[2]))):
+            print("Error - Use of invalid register(s) (Line No.: "+str(i)+")")
+            i+=1
+            continue
+    elif words[0] in ["ld","st"]:
+        if(not(check_reg(words[1]))):
+            print("Error - Use of invalid register(s) (Line No.: "+str(i)+")")
+            i+=1
+            continue
     
     if words[0]=="var":
         l=number_of_instructions #as the first memory addr is 0

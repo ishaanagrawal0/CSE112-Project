@@ -161,7 +161,6 @@ def And(reg1,reg2,reg3):
     s+=registers[reg1]
     s+=registers[reg2]
     s+=registers[reg3]
-    
     return s
     
 def Invert(reg1,reg2):

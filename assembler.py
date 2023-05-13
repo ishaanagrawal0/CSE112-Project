@@ -259,27 +259,7 @@ for line in lines:
         print("Error - Halt not used as last instruction (Line No.: "+str(i)+")")
         
     
-    if words[0] in ["add","sub","mul","xor","or","and"]:
-       if(not(check_reg(words[1])) and not(check_reg(words[2])) and not(check_reg(words[3]))):
-        print("Error - Use of invalid register(s) (Line No.: "+str(i)+")")
-        i+=1
-        continue
-    elif words[0] in ["rs","ls"]:
-        if(not(check_reg(words[1]))):
-            print("Error - Use of invalid register(s) (Line No.: "+str(i)+")")
-            i+=1
-            continue
-    elif words[0] in ["div","not","cmp"]:
-        if(not(check_reg(words[1])) and not(check_reg(words[2]))):
-            print("Error - Use of invalid register(s) (Line No.: "+str(i)+")")
-            i+=1
-            continue
-    elif words[0] in ["ld","st"]:
-        if(not(check_reg(words[1]))):
-            print("Error - Use of invalid register(s) (Line No.: "+str(i)+")")
-            i+=1
-            continue
-        
+
     
     if words[0]=="var":
         l=number_of_instructions #as the first memory addr is 0

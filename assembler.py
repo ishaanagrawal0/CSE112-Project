@@ -66,7 +66,6 @@ def Addition(reg1,reg2,reg3):
     s+=registers[reg1]
     s+=registers[reg2]
     s+=registers[reg3]
-    
     return s
 
 def Subtraction(reg1,reg2,reg3):
@@ -76,7 +75,22 @@ def Subtraction(reg1,reg2,reg3):
     s+=registers[reg1]
     s+=registers[reg2]
     s+=registers[reg3]
-    
+    return s
+
+def Multiply(reg1,reg2,reg3):
+    #format is reg1=reg2.reg3
+    s="00110"
+    s+="00" #unused bits
+    s+=registers[reg1]
+    s+=registers[reg2]
+    s+=registers[reg3]
+    return s
+
+def Divide(reg3,reg4):
+    s="00111"
+    s+="0"*5
+    s+=registers[reg3]
+    s+=registers[reg4]
     return s
 
 def Load(reg1,Mem_addr):
@@ -92,23 +106,6 @@ def Store(reg1,Mem_addr):
     s+="0"
     s+=registers[reg1]
     s+=dictionary_of_variables[Mem_addr]
-    return s
-
-def Multiply(reg1,reg2,reg3):
-    #format is reg1=reg2.reg3
-    s="00110"
-    s+="00" #unused bits
-    s+=registers[reg1]
-    s+=registers[reg2]
-    s+=registers[reg3]
-    
-    return s
-
-def Divide(reg3,reg4):
-    s="00111"
-    s+="0"*5
-    s+=registers[reg3]
-    s+=registers[reg4]
     return s
 
 def Right_Shift(reg1,Imm):
@@ -142,7 +139,6 @@ def ExclusiveOR(reg1,reg2,reg3):
     s+=registers[reg1]
     s+=registers[reg2]
     s+=registers[reg3]
-    
     return s
 
 def Or(reg1,reg2,reg3):
@@ -152,7 +148,6 @@ def Or(reg1,reg2,reg3):
     s+=registers[reg1]
     s+=registers[reg2]
     s+=registers[reg3]
-    
     return s
 
 def And(reg1,reg2,reg3):
@@ -162,7 +157,6 @@ def And(reg1,reg2,reg3):
     s+=registers[reg1]
     s+=registers[reg2]
     s+=registers[reg3]
-    
     return s
     
 def Invert(reg1,reg2):
@@ -250,11 +244,8 @@ for line in lines:
     else:
         if(words[0]=="var" and normal_instruction_flag==1):
             print("Error - All variables not declared at the beginning! (Line No.: "+str(number_of_instructions)+")")    
-        
-        
     if words[0]=="hlt":
         break
-        
     if words[0][-1]==":":
         dictionary_of_label_addresses_decimal[words[0][:-1]] =number_of_instructions-1
         
@@ -269,8 +260,7 @@ for line in lines:
         continue
     if (halt_finder==1):  #correct
         print("Error - Halt not used as last instruction (Line No.: "+str(i)+")")
-        
-    
+     
     if words[0] in ["add","sub","mul","xor","or","and"]:
        if(not(check_reg(words[1])) and not(check_reg(words[2])) and not(check_reg(words[3]))):
         print("Error - Use of invalid register(s) (Line No.: "+str(i)+")")
@@ -291,7 +281,6 @@ for line in lines:
             print("Error - Use of invalid register(s) (Line No.: "+str(i)+")")
             i+=1
             continue
-        
     
     if words[0]=="var":
         l=number_of_instructions #as the first memory addr is 0
@@ -489,10 +478,8 @@ for line in lines:
         for x in s:
             s1=s1+x+" "
         lines.insert(i + 1, s1)
-    
     else:
         print("Syntax Error!")
-
     i+=1
 
 if halt_finder!=1:

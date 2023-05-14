@@ -242,7 +242,8 @@ for line in lines:
     line=" ".join(line.split())
     line=line.strip().replace("\n","")
     words=line.split(" ")
-    
+    if words[0]=="":
+        continue
     if words[0]!="var":
         normal_instruction_flag=1
         number_of_instructions+=1
@@ -264,7 +265,8 @@ for line in lines:
     words = line.split()  # Splitting without specifying a delimiter to split on whitespace
     # Rest of your code to process the words
 
-    
+    if words==[]:
+        continue
     if (halt_finder==1):  #correct
         print("Error - Halt not used as last instruction (Line No.: "+str(i)+")")
         

@@ -182,3 +182,16 @@ st R3 output2
 st R2 input1
 st R3 input2
 end: hlt
+
+Test case 4:
+
+var xyz
+var abc
+l1: mov R0 $100
+mov R1 $50
+l_2:    st R0 xyz
+    add R0 R0 R1
+    ld R2 abc
+    je l1
+    jgt l_2
+hlt

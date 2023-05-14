@@ -158,7 +158,7 @@ ld R1 input2
 ld R2 output1
 ld R3 output2
 sub R2 R1 R0
-add R3 R1 R0
+add R3 R1 R0	
 st R2 output1
 st R3 output2
 st R2 input1
@@ -168,7 +168,6 @@ ld R1 input2
 ld R2 output1
 ld R3 output2
 mul R2 R1 R0
-div R3 R1 R0
 st R2 output1
 st R3 output2
 st R2 input1
@@ -177,11 +176,9 @@ case3: ld R0 input1
 ld R1 input2
 ld R2 output1
 ld R3 output2
-div R2 R1 R0
 mul R3 R1 R0
 st R2 output1
 st R3 output2
 st R2 input1
 st R3 input2
-end:
-hlt
+end: hlt

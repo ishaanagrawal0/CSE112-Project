@@ -83,4 +83,10 @@ for i in MEM:
     if i == '1101000000000000':
         exit() #GC se exit
     else:
-        pass
+        opcode = i[0:3]
+        if opcode == "001":
+            add(i)
+        elif opcode == "010":
+            sub(i)
+        else:
+            pass  # Handle other opcodes here

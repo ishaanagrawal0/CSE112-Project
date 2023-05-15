@@ -79,6 +79,18 @@ def sub(i):
     else:
         register_values[regA] = decimalToBinary(binaryToDecimal(register_values[regB]) - binaryToDecimal(register_values[regC]))
 
+def mul(i):
+    regA = registers[i[7:10]]
+    regB = registers[i[10:13]]
+    regC = registers[i[13:16]]
+    if decimalToBinary(binaryToDecimal(register_values[regB]) + binaryToDecimal(register_values[regC]))<=1111111:
+        register_values[regA] = decimalToBinary(binaryToDecimal(register_values[regB]) * binaryToDecimal(register_values[regC]))
+    else:
+        #Write the FLAGS condition for overflow here.
+        register_values[regA] = 0000000
+
+
+
 for i in MEM:
     if i == '1101000000000000':
         exit() #GC se exit

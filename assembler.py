@@ -18,8 +18,8 @@ registers={
     "R6": "110",
     "FLAGS": "111"
 }
-dictionary_of_reg_values={}  #to store the values of the registers in the dictionary
-dictionary_of_reg_binary={}  #to store the binary values of the registers(16 bits)
+dictionary_of_reg_values={"R0":0,"R1":0,'R2':0,"R3":0,"R4":0,"R5":0,"R6":0,"FLAGS":0}  #to store the values of the registers in the dictionary
+dictionary_of_reg_binary={"R0":0,"R1":0,'R2':0,"R3":0,"R4":0,"R5":0,"R6":0,"FLAGS":0}  #to store the binary values of the registers(16 bits)
 
 flags="0"*16  # initial value of flag is of form 000000000000/0000
 
@@ -33,7 +33,7 @@ list_of_variables=[]
 #A label
 #An instruction
 #A variable definition
-f1=open(r"stdin.txt","r")
+f1=open(r"C:\Users\adity\Downloads\stdin.txt","r")
 lines=f1.readlines()
 f1.close()
 
@@ -223,7 +223,7 @@ def Halt():
 
 # Function to check whether the name of register is correct or not
 def check_reg(reg1):
-    if (reg1 in registers) and(reg1!="FLAGS"):
+    if (reg1 in registers): #and(reg1!="FLAGS"):
         return 1
     return 0
 

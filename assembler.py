@@ -4,7 +4,7 @@ Debjit Banerji 2022146
 Himang Chandra Garg 2022214
 Ishaan Agrawal 2022221
 '''
-
+import sys
 dictionary_of_variables={} #dictionary to store the variables
 
 #7 registers and one flag register we have in the question
@@ -33,9 +33,9 @@ list_of_variables=[]
 #A label
 #An instruction
 #A variable definition
-f1=open(r"C:\Users\adity\Downloads\stdin.txt","r")
-lines=f1.readlines()
-f1.close()
+
+lines=sys.stdin.readlines()
+#print(lines)
 
 def MoveImmediate(reg1,Imm):
     #format is mov reg1 $Imm
@@ -489,7 +489,7 @@ if halt_finder!=1:
 
 f2.close()
 
-print(dictionary_of_variables)
-print(dictionary_of_label_addresses_decimal)
-print(dictionary_of_reg_values)
-print(dictionary_of_reg_binary)
+#print(dictionary_of_variables)
+#print(dictionary_of_label_addresses_decimal)
+#print(dictionary_of_reg_values)
+#print(dictionary_of_reg_binary)

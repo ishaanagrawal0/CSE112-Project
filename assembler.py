@@ -35,8 +35,7 @@ list_of_variables=[]
 #A variable definition
 
 lines=sys.stdin.readlines()
-#print(lines)
-
+# print(lines)
 def MoveImmediate(reg1,Imm):
     #format is mov reg1 $Imm
     s="00010"
@@ -301,7 +300,9 @@ for line in lines:
                     f2.write(var)
                     f2.write("\n")
             else:
-                print("Error - Use of invalid register! (Line No.: "+str(i)+")")              
+                print("Error - Use of invalid register! (Line No.: "+str(i)+")")   
+                halt_finder=1
+                break           
             
         else:
             if (check_reg(words[1]) and check_reg(words[2])):
@@ -312,10 +313,13 @@ for line in lines:
                 f2.write("\n")
             else:
                 print("Error - Use of invalid register! (Line No.: "+str(i)+")")
+                halt_finder=1
+                break
     
     elif words[0]=="ld":
         if(words[2] not in dictionary_of_variables):
             print("Error - Invalid Variable Name")
+            halt_finder=1
             break
         dictionary_of_reg_values[words[1]]=0 #storing the default value to 0 for loading from a memory location
         print(Load(words[1],words[2]))
@@ -325,6 +329,7 @@ for line in lines:
     elif words[0]=="st":
         if(words[2] not in dictionary_of_variables):
             print("Error - Invalid Variable Name")
+            halt_finder=1
             break
         if words[1] not in dictionary_of_reg_values:
             dictionary_of_reg_values[words[1]]=0
@@ -480,6 +485,8 @@ for line in lines:
         lines.insert(i + 1, s1)
     else:
         print("Syntax Error!")
+        halt_finder=1
+        break
     i+=1
 
 if halt_finder!=1:

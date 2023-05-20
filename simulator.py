@@ -89,16 +89,40 @@ def mul(i):
         #Write the FLAGS condition for overflow here.
         register_values[regA] = 0000000
 
+def xor(i):
+    regA = registers[i[7:10]]
+    regB = registers[i[10:13]]
+    regC = registers[i[13:16]]
+    register_values[regA] = decimalToBinary(binaryToDecimal(register_values[regB]) ^ binaryToDecimal(register_values[regC]))
 
+def OR(i):
+    regA = registers[i[7:10]]
+    regB = registers[i[10:13]]
+    regC = registers[i[13:16]]
+    register_values[regA] = decimalToBinary(binaryToDecimal(register_values[regB]) | binaryToDecimal(register_values[regC]))
+
+def AND(i):
+    regA = registers[i[7:10]]
+    regB = registers[i[10:13]]
+    regC = registers[i[13:16]]
+    register_values[regA] = decimalToBinary(binaryToDecimal(register_values[regB]) & binaryToDecimal(register_values[regC]))
 
 for i in MEM:
     if i == '1101000000000000':
         exit() #GC se exit
     else:
-        opcode = i[0:3]
-        if opcode == "001":
+        opcode = i[0:5]
+        if opcode == "00000":
             add(i)
-        elif opcode == "010":
+        elif opcode == "00001":
             sub(i)
+        elif opcode == "00110":
+            mul(i)
+        elif opcode == "01010":
+            xor(i)
+        elif opcode == "01011":
+            OR(i)
+        elif opcode == "01100":
+            AND(i)
         else:
             pass  # Handle other opcodes here

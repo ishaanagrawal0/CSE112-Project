@@ -107,6 +107,13 @@ def AND(i):
     regC = registers[i[13:16]]
     register_values[regA] = decimalToBinary(binaryToDecimal(register_values[regB]) & binaryToDecimal(register_values[regC]))
 
+#Type-B Binary encodings
+
+def mov_imm(i):
+    regA = registers[i[6:9]]
+    imm = i[9:16]
+    register_values[regA] = imm
+
 for i in MEM:
     if i == '1101000000000000':
         exit() #GC se exit
@@ -124,5 +131,7 @@ for i in MEM:
             OR(i)
         elif opcode == "01100":
             AND(i)
+        elif opcode == "00010":
+            mov_imm(i)
         else:
             pass  # Handle other opcodes here

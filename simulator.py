@@ -137,6 +137,11 @@ def mov_reg(i):
     regB = registers[i[13:16]]
     register_values[regA] = int(i[13:16])
     
+def Invert(i):
+    regA = registers[i[10:13]]
+    regB = registers[i[13:16]]
+    register_values[regA] = decimalToBinary((2**16)-binaryToDecimal(register_values[regB])-1)
+    
 for i in MEM:
     if i == '1101000000000000':
         exit() #GC se exit
@@ -162,5 +167,7 @@ for i in MEM:
             left_shift(i)
         elif opcode == "00011":
             mov_reg(i)
+        elif opcode == "01101":
+            Invert(i)
         else:
             pass  # Handle other opcodes here

@@ -129,7 +129,14 @@ def left_shift(i):
         register_values[regA]=0
     else:
         register_values[regA]=decimalToBinary(binaryToDecimal(register_values[regA])*(2**imm))
-        
+
+#Type-C Binary encodings
+
+def mov_reg(i):
+    regA = registers[i[10:13]]
+    regB = registers[i[13:16]]
+    register_values[regA] = int(i[13:16])
+    
 for i in MEM:
     if i == '1101000000000000':
         exit() #GC se exit
@@ -153,5 +160,7 @@ for i in MEM:
             right_shift(i)
         elif opcode == "01001":
             left_shift(i)
+        elif opcode == "00011":
+            mov_reg(i)
         else:
             pass  # Handle other opcodes here

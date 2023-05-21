@@ -112,7 +112,7 @@ def AND(i):
 def mov_imm(i):
     regA = registers[i[6:9]]
     imm = i[9:16]
-    register_values[regA] = imm
+    register_values[regA] = int(imm)
 
 for i in MEM:
     if i == '1101000000000000':

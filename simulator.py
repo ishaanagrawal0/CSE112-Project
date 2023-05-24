@@ -225,7 +225,7 @@ for i in MEM:
         else:
             pass  # Handle other opcodes here
     a = bin(PC)
-    a1 = ('0'*(7-len(a[2:]))) + a[2:]
-    a2 = [('0'*(16-len(bin(register_values[i])[2:])))+bin(register_values[i])[2:] for i in register_values.keys()]
-    a1.extend(a2)
-    print(' '.join([a1]))
+    a1 = ('0'*(7-len(a[2:]))) + str(a[2:])
+    #a2 = [('0'*(16-len(bin(register_values[i])[2:])))+bin(register_values[i])[2:] for i in register_values.keys()]
+    #a1.extend(a2)
+    print(a1+" "+dictionary_of_reg_binary["R0"]+" "+dictionary_of_reg_binary["R1"]+" "+dictionary_of_reg_binary["R2"]+" "+dictionary_of_reg_binary["R3"]+" "+dictionary_of_reg_binary["R4"]+" "+dictionary_of_reg_binary["R5"]+" "+dictionary_of_reg_binary["R6"]+" "+dictionary_of_reg_binary["FLAGS"]+" ")

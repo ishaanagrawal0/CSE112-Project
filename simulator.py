@@ -170,7 +170,25 @@ def cmp(i):
         register_values[regF] = '0000000000000100'
     else:
         register_values[regF] = '0000000000000001'
-    
+
+#Type-D Binary encodings
+
+def ld(i):
+    regA = registers[i[6:9]]
+    regAddr = registers[i[9:]]
+
+def st(i):
+    regA = registers[i[6:9]]
+    regAddr = registers[i[9:]]
+
+#Type-E Binary encodings
+
+
+
+#Type-F Binary encodings
+
+def halt(i):
+    exit()
 
 PC = 0 # Program Counter
 

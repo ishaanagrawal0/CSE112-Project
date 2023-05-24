@@ -159,7 +159,19 @@ def Divide(i):
         register_values[regF] = register_values[regF][:12]+'1'+register_values[regF][13:]
     else:
         register_values[regA] = register_values[regA]//register_values[regB]
+
+def cmp(i):
+    regA = registers[i[10:13]]
+    regB = registers[i[13:]]
+    regF = registers["111"]
+    if register_values[regA] > register_values[regB]:
+        register_values[regF] = '0000000000000010'
+    elif register_values[regA] < register_values[regB]:
+        register_values[regF] = '0000000000000100'
+    else:
+        register_values[regF] = '0000000000000001'
     
+
 PC = 0 # Program Counter
 
 for i in MEM:

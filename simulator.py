@@ -74,11 +74,14 @@ def add(i):
     
     if register_values[regB] + register_values[regC] <= 128:
         register_values[regA] = register_values[regB] + register_values[regC]
+        dictionary_of_reg_binary[regA]=(16-len(str(bin(register_values[regA]))[2:]))*'0'+str(bin(register_values[regA]))[2:]
+        
+        
     else:
         #Write the FLAGS condition for overflow here.
         register_values[regF] = register_values[regF][:12]+'1'+register_values[regF][13:]
         register_values[regA] = 0
-        register_values[regA]='0000000000000000'
+        dictionary_of_reg_binary[regA]='0000000000000000'
 
 def sub(i):
     regA = registers[i[7:10]]
@@ -91,6 +94,8 @@ def sub(i):
         register_values[regF] = register_values[regF][:12]+'1'+register_values[regF][13:]
     else:
         register_values[regA] =(register_values[regB])-(register_values[regC])
+        dictionary_of_reg_binary[regA]=(16-len(str(bin(register_values[regA]))[2:]))*'0'+str(bin(register_values[regA]))[2:]
+        
 
 def mul(i):
     regA = registers[i[7:10]]
@@ -103,6 +108,7 @@ def mul(i):
         #Write the FLAGS condition for overflow here.
         register_values[regF] = register_values[regF][:12]+'1'+register_values[regF][13:]
         register_values[regA] = 0000000
+        
 
 def xor(i):
     regA = registers[i[7:10]]
@@ -226,6 +232,7 @@ for i in MEM:
             pass  # Handle other opcodes here
     a = bin(PC)
     a1 = ('0'*(7-len(a[2:]))) + str(a[2:])
+    
     #a2 = [('0'*(16-len(bin(register_values[i])[2:])))+bin(register_values[i])[2:] for i in register_values.keys()]
     #a1.extend(a2)
     print(a1+" "+dictionary_of_reg_binary["R0"]+" "+dictionary_of_reg_binary["R1"]+" "+dictionary_of_reg_binary["R2"]+" "+dictionary_of_reg_binary["R3"]+" "+dictionary_of_reg_binary["R4"]+" "+dictionary_of_reg_binary["R5"]+" "+dictionary_of_reg_binary["R6"]+" "+dictionary_of_reg_binary["FLAGS"]+" ")

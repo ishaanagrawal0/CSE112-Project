@@ -15,7 +15,14 @@ registers={
     "110": "R6",
     "111": "FLAGS"
 }
-
+dictionary_of_reg_binary={"R0":'0000000000000000',
+                          "R1":'0000000000000000',
+                          'R2':'0000000000000000',
+                          "R3":'0000000000000000',
+                          "R4":'0000000000000000',
+                          "R5":'0000000000000000',
+                          "R6":'0000000000000000',
+                          "FLAGS":'0000000000000000'}
 #All registers in this dictionary are storing integers except for the flags register which is storing a string indicating the binary value
 register_values = {
     "R0": 0,
@@ -28,22 +35,22 @@ register_values = {
     "FLAGS": 0
 }
 
-zero = 0000000000000000
-register_output = [zero,zero,zero,zero,zero,zero,zero,zero]
+initial_value = '0000000000000000'
+register_output = [initial_value,initial_value,initial_value,initial_value,initial_value,initial_value,initial_value,initial_value]
 
-f1 = open("stdout.txt", "r")
+f1 = open(r"C:\Users\adity\Downloads\stdout.txt", "r")
 MEM = f1.readlines()
 for i in range(len(MEM)):
-    MEM[i] = MEM[i].strip()
+    MEM[i] = MEM[i].strip()  # for the extra spaces(if any in the binary code)
 f1.close()
-print(MEM)
+#print(MEM)
 
 
 def binaryToDecimal(binary):
-    binary1 = binary
+    binary1 = str(binary)
     decimal, i, n = 0, 0, 0
-    for i in range(len(binary)):
-        if(binary[i] == '1'):
+    for i in range(len(binary1)):
+        if(binary1[i] == '1'):
             decimal += pow(2,i)
 
     return decimal
@@ -62,25 +69,28 @@ def binaryToDecimal(binary):
 def add(i):
     regA = registers[i[7:10]]
     regB = registers[i[10:13]]
-    regC = registers[i[13:16]]
+    regC = registers[i[13:]]
     regF = registers['111']
-    if binaryToDecimal(register_values[regB]) + binaryToDecimal(register_values[regC]) <= 128:
-        register_values[regA] = binaryToDecimal(register_values[regB]) + binaryToDecimal(register_values[regC])
+    
+    if register_values[regB] + register_values[regC] <= 128:
+        register_values[regA] = register_values[regB] + register_values[regC]
     else:
         #Write the FLAGS condition for overflow here.
         register_values[regF] = register_values[regF][:12]+'1'+register_values[regF][13:]
-        register_values[regA] = 0000000
+        register_values[regA] = 0
+        register_values[regA]='0000000000000000'
 
 def sub(i):
     regA = registers[i[7:10]]
     regB = registers[i[10:13]]
-    regC = registers[i[13:16]]
+    regC = registers[i[13:]]
     regF = registers['111']
-    if (register_values[regB]) < binaryToDecimal(register_values[regC]):
-        register_values[regA] = 0000000
+    if (register_values[regB]) < register_values[regC]:
+        register_values[regA] = 0
+        dictionary_of_reg_binary[regA]='0000000000000000'
         register_values[regF] = register_values[regF][:12]+'1'+register_values[regF][13:]
     else:
-        register_values[regA] = binaryToDecimal(register_values[regB]) - binaryToDecimal(register_values[regC])
+        register_values[regA] =(register_values[regB])-(register_values[regC])
 
 def mul(i):
     regA = registers[i[7:10]]
@@ -154,6 +164,9 @@ PC = 0 # Program Counter
 
 for i in MEM:
     if i[:5] == '11010':
+        #this is halt command
+        for h in MEM:
+            print(h) #printin the memory at the end
         break #GC se exit
     else:
         opcode = i[0:5]

@@ -79,7 +79,7 @@ def add(i):
         
     else:
         #Write the FLAGS condition for overflow here.
-        register_values[regF] = register_values[regF][:12]+'1'+register_values[regF][13:]
+        dictionary_of_reg_binary[regF] = dictionary_of_reg_binary[regF][:12]+'1'+dictionary_of_reg_binary[regF][13:]
         register_values[regA] = 0
         dictionary_of_reg_binary[regA]='0000000000000000'
 

@@ -5,6 +5,8 @@ Himang Chandra Garg 2022214
 Ishaan Agrawal 2022221
 '''
 
+
+MAX_INT=(2**16-1)
 registers={
     "000": "R0",
     "001": "R1",
@@ -72,7 +74,7 @@ def add(i):
     regC = registers[i[13:]]
     regF = registers['111']
     
-    if register_values[regB] + register_values[regC] <= 128:
+    if register_values[regB] + register_values[regC] <= MAX_INT:
         register_values[regA] = register_values[regB] + register_values[regC]
         dictionary_of_reg_binary[regA]=(16-len(str(bin(register_values[regA]))[2:]))*'0'+str(bin(register_values[regA]))[2:]
         
@@ -81,7 +83,7 @@ def add(i):
         #Write the FLAGS condition for overflow here.
         dictionary_of_reg_binary[regF] = dictionary_of_reg_binary[regF][:12]+'1'+dictionary_of_reg_binary[regF][13:]
         register_values[regA] = 0
-        dictionary_of_reg_binary[regA]='0000000000000000'
+        dictionary_of_reg_binary[regA]='0'*16
 
 def sub(i):
     regA = registers[i[7:10]]
@@ -90,7 +92,7 @@ def sub(i):
     regF = registers['111']
     if (register_values[regB]) < register_values[regC]:
         register_values[regA] = 0
-        dictionary_of_reg_binary[regA]='0000000000000000'
+        dictionary_of_reg_binary[regA]='0'*16
         register_values[regF] = register_values[regF][:12]+'1'+register_values[regF][13:]
     else:
         register_values[regA] =(register_values[regB])-(register_values[regC])
@@ -102,12 +104,14 @@ def mul(i):
     regB = registers[i[10:13]]
     regC = registers[i[13:16]]
     regF = registers['111']
-    if binaryToDecimal(register_values[regB]) * binaryToDecimal(register_values[regC]) <= 128:
-        register_values[regA] = binaryToDecimal(register_values[regB]) * binaryToDecimal(register_values[regC])
+    if (register_values[regB]) * (register_values[regC]) <= MAX_INT:
+        register_values[regA] = (register_values[regB]) * (register_values[regC])
+        dictionary_of_reg_binary[regA]=(16-len(str(bin(register_values[regA]))[2:]))*'0'+str(bin(register_values[regA]))[2:]
     else:
         #Write the FLAGS condition for overflow here.
         register_values[regF] = register_values[regF][:12]+'1'+register_values[regF][13:]
-        register_values[regA] = 0000000
+        register_values[regA] = 0
+        dictionary_of_reg_binary[regA]='0'*16
         
 
 def xor(i):

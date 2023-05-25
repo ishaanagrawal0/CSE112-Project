@@ -118,19 +118,23 @@ def xor(i):
     regA = registers[i[7:10]]
     regB = registers[i[10:13]]
     regC = registers[i[13:16]]
-    register_values[regA] = binaryToDecimal(register_values[regB]) ^ binaryToDecimal(register_values[regC])
+    register_values[regA] =register_values[regB]^(register_values[regC])
+    dictionary_of_reg_binary[regA]=(16-len(str(bin(register_values[regA]))[2:]))*'0'+str(bin(register_values[regA]))[2:]
 
 def OR(i):
     regA = registers[i[7:10]]
     regB = registers[i[10:13]]
     regC = registers[i[13:16]]
-    register_values[regA] = binaryToDecimal(register_values[regB]) | binaryToDecimal(register_values[regC])
+    register_values[regA] =(register_values[regB]) | (register_values[regC])
+    dictionary_of_reg_binary[regA]=(16-len(str(bin(register_values[regA]))[2:]))*'0'+str(bin(register_values[regA]))[2:]
+
 
 def AND(i):
     regA = registers[i[7:10]]
     regB = registers[i[10:13]]
     regC = registers[i[13:16]]
-    register_values[regA] = binaryToDecimal(register_values[regB]) & binaryToDecimal(register_values[regC])
+    register_values[regA] =(register_values[regB]) & (register_values[regC])
+    dictionary_of_reg_binary[regA]=(16-len(str(bin(register_values[regA]))[2:]))*'0'+str(bin(register_values[regA]))[2:]
 
 #Type-B Binary encodings
 

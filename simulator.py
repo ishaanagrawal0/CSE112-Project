@@ -5,7 +5,7 @@ Himang Chandra Garg 2022214
 Ishaan Agrawal 2022221
 '''
 
-MAX_INT=(2**16-1) # Considering the limits of the values that we followed for the assembler code
+MAX_INT=(2**16-1)
 registers={
     "000": "R0",
     "001": "R1",

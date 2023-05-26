@@ -5,8 +5,7 @@ Himang Chandra Garg 2022214
 Ishaan Agrawal 2022221
 '''
 
-
-MAX_INT=(2**16-1)
+MAX_INT=(2**16-1) # Considering the limits of the values that we followed for the assembler code
 registers={
     "000": "R0",
     "001": "R1",
@@ -53,7 +52,7 @@ def binaryToDecimal(binary):
     decimal, i, n = 0, 0, 0
     for i in range(len(binary1)):
         if(binary1[i] == '1'):
-            decimal += pow(2,i)
+            decimal += 2**i
 
     return decimal
 
@@ -102,7 +101,7 @@ def sub(i):
 def mul(i):
     regA = registers[i[7:10]]
     regB = registers[i[10:13]]
-    regC = registers[i[13:16]]
+    regC = registers[i[13:]]
     regF = registers['111']
     if (register_values[regB]) * (register_values[regC]) <= MAX_INT:
         register_values[regA] = (register_values[regB]) * (register_values[regC])
@@ -117,14 +116,14 @@ def mul(i):
 def xor(i):
     regA = registers[i[7:10]]
     regB = registers[i[10:13]]
-    regC = registers[i[13:16]]
+    regC = registers[i[13:]]
     register_values[regA] =register_values[regB]^(register_values[regC])
     dictionary_of_reg_binary[regA]=(16-len(str(bin(register_values[regA]))[2:]))*'0'+str(bin(register_values[regA]))[2:]
 
 def OR(i):
     regA = registers[i[7:10]]
     regB = registers[i[10:13]]
-    regC = registers[i[13:16]]
+    regC = registers[i[13:]]
     register_values[regA] =(register_values[regB]) | (register_values[regC])
     dictionary_of_reg_binary[regA]=(16-len(str(bin(register_values[regA]))[2:]))*'0'+str(bin(register_values[regA]))[2:]
 
@@ -132,7 +131,7 @@ def OR(i):
 def AND(i):
     regA = registers[i[7:10]]
     regB = registers[i[10:13]]
-    regC = registers[i[13:16]]
+    regC = registers[i[13:]]
     register_values[regA] =(register_values[regB]) & (register_values[regC])
     dictionary_of_reg_binary[regA]=(16-len(str(bin(register_values[regA]))[2:]))*'0'+str(bin(register_values[regA]))[2:]
 
@@ -140,18 +139,22 @@ def AND(i):
 
 def mov_imm(i):
     regA = registers[i[6:9]]
-    imm = i[9:16]
-    register_values[regA] = int(imm)
+    imm = i[9:]
+    # register_values[regA] = int(imm)
+    register_values[regA] = binaryToDecimal(imm)
+    dictionary_of_reg_values = (16-len(bin(register_values[regA])[2:]))*'0' + bin(register_values[regA])[2:]
     
 def left_shift(i):
     regA = registers[i[6:9]]
     imm = i[9:15]
-    register_values[regA] = binaryToDecimal(register_values[imm]) << 1
+    register_values[regA] = binaryToDecimal(imm) << 1
+    dictionary_of_reg_values = (16-len(bin(register_values[regA])[2:]))*'0' + bin(register_values[regA])[2:]
 
 def right_shift(i):
     regA = registers[i[6:9]]
     imm = i[13:16]
-    register_values[regA] = binaryToDecimal(register_values[imm]) >> 1
+    register_values[regA] = binaryToDecimal(imm) >> 1
+    dictionary_of_reg_values = (16-len(bin(register_values[regA])[2:]))*'0' + bin(register_values[regA])[2:]
 
 #Type-C Binary encodings
 
@@ -159,11 +162,13 @@ def mov_reg(i):
     regA = registers[i[10:13]]
     regB = registers[i[13:16]]
     register_values[regA] = register_values[regB]
+    dictionary_of_reg_binary[regA] = dictionary_of_reg_binary[regB]
     
 def Invert(i):
     regA = registers[i[10:13]]
     regB = registers[i[13:16]]
-    register_values[regA] = binaryToDecimal((2**16)-binaryToDecimal(register_values[regB])-1)
+    register_values[regA] = ~ binaryToDecimal(register_values[regB]) # binaryToDecimal((2**16)-binaryToDecimal(register_values[regB])-1)
+    dictionary_of_reg_binary[regA] = (16-len(bin(regitser_values[regA])[2:]))*'0' + bin(register_values[regA])[2:]
 
 def Divide(i):
     regA = registers[i[10:13]]
@@ -171,8 +176,15 @@ def Divide(i):
     regF = registers["111"]
     if(register_values[regB] == 0):
         register_values[regF] = register_values[regF][:12]+'1'+register_values[regF][13:]
+        register_values['000'] = 0
+        dictionary_of_reg_binary['000'] = '0'*16
+        register_values['001'] = 0
+        dictionary_of_reg_values['001'] = '0'*16
     else:
-        register_values[regA] = register_values[regA]//register_values[regB]
+        register_values['000'] = register_values[regA]//register_values[regB]
+        dictionary_of_reg_values['000'] = (16-len(bin(register_values[regA])[2:]))*'0' + bin(register_values[regA])[2:]
+        register_values['001'] = register_values[regA]%register_values[regB]
+        dictionary_of_reg_values['000'] = (16-len(bin(register_values[regB])[2:]))*'0' + bin(register_values[regB])[2:]
 
 def cmp(i):
     regA = registers[i[10:13]]
@@ -196,8 +208,30 @@ def st(i):
     regAddr = registers[i[9:]]
 
 #Type-E Binary encodings
+def jmp(i):
+    PC = binaryToDecimal(i[9:])
+    return PC
+    
+def jlt(i):
+    if(dictionary_of_reg_binary['111'][13] = '1'):
+        PC = binaryToDecimal(i[9:])
+        return PC
+    else:
+        return 0
 
+def jgt(i):
+    if(dictionary_of_reg_binary['111'][14] = '1'):
+        PC = binaryToDecimal(i[9:])
+        return PC
+    else:
+        return 0
 
+def je(i):
+    if(dictionary_of_reg_binary['111'][15] = '1'):
+        PC = binaryToDecimal(i[9:])
+        return PC
+    else:
+        return 0
 
 #Type-F Binary encodings
 
@@ -206,41 +240,56 @@ def halt(i):
 
 PC = 0 # Program Counter
 
-for i in MEM:
-    if i[:5] == '11010':
+while(True):
+    if MEM[PC][:5] == '11010':
         #this is halt command
         for h in MEM:
             print(h) #printin the memory at the end
         break #GC se exit
     else:
-        opcode = i[0:5]
+        opcode = MEM[PC][0:5]
         if opcode == "00000":
-            add(i)
+            add(MEM[PC])
         elif opcode == "00001":
-            sub(i)
+            sub(MEM[PC])
         elif opcode == "00110":
-            mul(i)
+            mul(MEM[PC])
         elif opcode == "01010":
-            xor(i)
+            xor(MEM[PC])
         elif opcode == "01011":
-            OR(i)
+            OR(MEM[PC])
         elif opcode == "01100":
-            AND(i)
+            AND(MEM[PC])
         elif opcode == "00010":
-            mov_imm(i)
+            mov_imm(MEM[PC])
         elif opcode == "01000":
-            right_shift(i)
+            right_shift(MEM[PC])
         elif opcode == "01001":
-            left_shift(i)
+            left_shift(MEM[PC])
         elif opcode == "00011":
-            mov_reg(i)
+            mov_reg(MEM[PC])
         elif opcode == "01101":
-            Invert(i)
-        else:
-            pass  # Handle other opcodes here
+            Invert(MEM[PC])
+        elif opcode == "00111":
+            Divide(MEM[PC])  # Handle other opcodes here
+        elif opcode == '01110':
+            cmp(MEM[PC])
+        elif opcode == '00100':
+            ld(MEM[PC])
+        elif opcode == '00101':
+            st(MEM[PC])
+        elif opcode == '01111':
+            jmp(MEM[PC])
+        elif opcode == '11100':
+            jlt(MEM[PC])
+        elif opcode == '11101':
+            jgt(MEM[PC])
+        elif opcode == '11111':
+            je(MEM[PC])
+            
     a = bin(PC)
     a1 = ('0'*(7-len(a[2:]))) + str(a[2:])
-    
+    PC += 1
     #a2 = [('0'*(16-len(bin(register_values[i])[2:])))+bin(register_values[i])[2:] for i in register_values.keys()]
     #a1.extend(a2)
     print(a1+" "+dictionary_of_reg_binary["R0"]+" "+dictionary_of_reg_binary["R1"]+" "+dictionary_of_reg_binary["R2"]+" "+dictionary_of_reg_binary["R3"]+" "+dictionary_of_reg_binary["R4"]+" "+dictionary_of_reg_binary["R5"]+" "+dictionary_of_reg_binary["R6"]+" "+dictionary_of_reg_binary["FLAGS"]+" ")

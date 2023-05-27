@@ -202,10 +202,16 @@ def cmp(i):
 def ld(i):
     regA = registers[i[6:9]]
     regAddr = registers[i[9:]]
+    a = binaryToDecimal(regAddr)
+    dictionary_of_reg_values[regA] = MEM[a]
+    register_values[regA] = binaryToDecimal(dictionary_of_reg_values[regA])
 
 def st(i):
     regA = registers[i[6:9]]
     regAddr = registers[i[9:]]
+    a = binaryToDecimal(regAddr)
+    dictionary_of_reg_values[regA] = MEM[a]
+    register_values[regA] = binaryToDecimal(dictionary_of_reg_values[regA])
 
 #Type-E Binary encodings
 def jmp(i):
@@ -237,7 +243,17 @@ def je(i):
 
 def halt(i):
     exit()
-
+    
+# Floating Point Arithmetic Operations    
+def addf(i):
+    
+    
+def subf(i):
+    
+    
+def movf(i):
+    
+    
 PC = 0 # Program Counter
 f1 = 0 # Flag for PC to be incremented or not
 

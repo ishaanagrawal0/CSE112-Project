@@ -142,19 +142,19 @@ def mov_imm(i):
     imm = i[9:]
     # register_values[regA] = int(imm)
     register_values[regA] = binaryToDecimal(imm)
-    dictionary_of_reg_values = (16-len(bin(register_values[regA])[2:]))*'0' + bin(register_values[regA])[2:]
+    dictionary_of_reg_binary[regA] = (16-len(bin(register_values[regA])[2:]))*'0' + bin(register_values[regA])[2:]
     
 def left_shift(i):
     regA = registers[i[6:9]]
     imm = i[9:15]
     register_values[regA] = binaryToDecimal(imm) << 1
-    dictionary_of_reg_values = (16-len(bin(register_values[regA])[2:]))*'0' + bin(register_values[regA])[2:]
+    dictionary_of_reg_binary[regA] = (16-len(bin(register_values[regA])[2:]))*'0' + bin(register_values[regA])[2:]
 
 def right_shift(i):
     regA = registers[i[6:9]]
     imm = i[13:16]
     register_values[regA] = binaryToDecimal(imm) >> 1
-    dictionary_of_reg_values = (16-len(bin(register_values[regA])[2:]))*'0' + bin(register_values[regA])[2:]
+    dictionary_of_reg_binary[regA] = (16-len(bin(register_values[regA])[2:]))*'0' + bin(register_values[regA])[2:]
 
 #Type-C Binary encodings
 
@@ -168,7 +168,7 @@ def Invert(i):
     regA = registers[i[10:13]]
     regB = registers[i[13:16]]
     register_values[regA] = ~ binaryToDecimal(register_values[regB]) # binaryToDecimal((2**16)-binaryToDecimal(register_values[regB])-1)
-    dictionary_of_reg_binary[regA] = (16-len(bin(regitser_values[regA])[2:]))*'0' + bin(register_values[regA])[2:]
+    dictionary_of_reg_binary[regA] = (16-len(bin(register_values[regA])[2:]))*'0' + bin(register_values[regA])[2:]
 
 def Divide(i):
     regA = registers[i[10:13]]
@@ -179,12 +179,12 @@ def Divide(i):
         register_values['000'] = 0
         dictionary_of_reg_binary['000'] = '0'*16
         register_values['001'] = 0
-        dictionary_of_reg_values['001'] = '0'*16
+        dictionary_of_reg_binary[registers['001']] = '0'*16
     else:
         register_values['000'] = register_values[regA]//register_values[regB]
-        dictionary_of_reg_values['000'] = (16-len(bin(register_values[regA])[2:]))*'0' + bin(register_values[regA])[2:]
+        dictionary_of_reg_binary[registers['000']] = (16-len(bin(register_values[regA])[2:]))*'0' + bin(register_values[regA])[2:]
         register_values['001'] = register_values[regA]%register_values[regB]
-        dictionary_of_reg_values['000'] = (16-len(bin(register_values[regB])[2:]))*'0' + bin(register_values[regB])[2:]
+        dictionary_of_reg_binary[registers['000']] = (16-len(bin(register_values[regB])[2:]))*'0' + bin(register_values[regB])[2:]
 
 def cmp(i):
     regA = registers[i[10:13]]
@@ -219,21 +219,21 @@ def jmp(i):
     return PC
     
 def jlt(i):
-    if(dictionary_of_reg_binary['111'][13] = '1'):
+    if(dictionary_of_reg_binary['111'][13] =='1'):
         PC = binaryToDecimal(i[9:])
         return PC
     else:
         return 0
 
 def jgt(i):
-    if(dictionary_of_reg_binary['111'][14] = '1'):
+    if (dictionary_of_reg_binary['FLAGS'][14] =='1'):
         PC = binaryToDecimal(i[9:])
         return PC
     else:
         return 0
 
 def je(i):
-    if(dictionary_of_reg_binary['111'][15] = '1'):
+    if(dictionary_of_reg_binary['FLAGS'][15] == '1'):
         PC = binaryToDecimal(i[9:])
         return PC
     else:
@@ -245,13 +245,13 @@ def halt(i):
     exit()
     
 # Floating Point Arithmetic Operations    
-def addf(i):
+#def addf(i):
     
     
-def subf(i):
+#def subf(i):
     
     
-def movf(i):
+#def movf(i):
     
     
 PC = 0 # Program Counter

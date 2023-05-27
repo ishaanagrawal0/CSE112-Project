@@ -239,8 +239,10 @@ def halt(i):
     exit()
 
 PC = 0 # Program Counter
+f1 = 0 # Flag for PC to be incremented or not
 
 while(True):
+    f1 = 0
     if MEM[PC][:5] == '11010':
         #this is halt command
         for h in MEM:
@@ -279,17 +281,28 @@ while(True):
         elif opcode == '00101':
             st(MEM[PC])
         elif opcode == '01111':
-            jmp(MEM[PC])
+            a = jmp(MEM[PC])
+            f1 = 1
         elif opcode == '11100':
-            jlt(MEM[PC])
+            a = jlt(MEM[PC])
+            if(a != 0):
+                PC = a
+                f1 = 1 
         elif opcode == '11101':
-            jgt(MEM[PC])
+            a = jgt(MEM[PC])
+            if(a != 0):
+                PC = a
+                f1 = 1
         elif opcode == '11111':
-            je(MEM[PC])
+            a = je(MEM[PC])
+            if(a != 0):
+                PC = a
+                f1 = 1
             
     a = bin(PC)
     a1 = ('0'*(7-len(a[2:]))) + str(a[2:])
-    PC += 1
+    if(f1==0):
+        PC += 1
     #a2 = [('0'*(16-len(bin(register_values[i])[2:])))+bin(register_values[i])[2:] for i in register_values.keys()]
     #a1.extend(a2)
     print(a1+" "+dictionary_of_reg_binary["R0"]+" "+dictionary_of_reg_binary["R1"]+" "+dictionary_of_reg_binary["R2"]+" "+dictionary_of_reg_binary["R3"]+" "+dictionary_of_reg_binary["R4"]+" "+dictionary_of_reg_binary["R5"]+" "+dictionary_of_reg_binary["R6"]+" "+dictionary_of_reg_binary["FLAGS"]+" ")

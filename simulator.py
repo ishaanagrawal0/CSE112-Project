@@ -201,15 +201,13 @@ def cmp(i):
 
 def ld(i):
     regA = registers[i[6:9]]
-    regAddr = registers[i[9:]]
-    a = binaryToDecimal(regAddr)
+    a = binaryToDecimal(i[9:])
     dictionary_of_reg_values[regA] = MEM[a]
     register_values[regA] = binaryToDecimal(dictionary_of_reg_values[regA])
 
 def st(i):
     regA = registers[i[6:9]]
-    regAddr = registers[i[9:]]
-    a = binaryToDecimal(regAddr)
+    a = binaryToDecimal(i[9:])
     dictionary_of_reg_values[regA] = MEM[a]
     register_values[regA] = binaryToDecimal(dictionary_of_reg_values[regA])
 

@@ -191,7 +191,7 @@ def Divide(i):
         register_values['001'] = register_values[regA]%register_values[regB]
         dictionary_of_reg_binary[registers['000']] = (16-len(bin(register_values[regB])[2:]))*'0' + bin(register_values[regB])[2:]
 
-def cmp(i):
+def cmp1(i):
     regA = registers[i[10:13]]
     regB = registers[i[13:]]
     regF = registers["111"]
@@ -294,7 +294,7 @@ while(True):
         elif opcode == "00111":
             Divide(MEM[PC])  # Handle other opcodes here
         elif opcode == '01110':
-            cmp(MEM[PC])
+            cmp1(MEM[PC])
         elif opcode == '00100':
             ld(MEM[PC],variable_number_counter)
             variable_number_counter+=1

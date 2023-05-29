@@ -15,7 +15,12 @@ registers={
     "101": "R5",
     "110": "R6",
     "111": "FLAGS"
-}
+}   
+dictionary_of_variables={} #this stores the variable : its address
+
+dictionary_of_label_addresses_decimal={} #this stores the variable : its value
+
+
 dictionary_of_reg_binary={"R0":'0000000000000000',
                           "R1":'0000000000000000',
                           'R2':'0000000000000000',
@@ -35,6 +40,7 @@ register_values = {
     "R6": 0,
     "FLAGS": 0
 }
+variable_number_counter=1
 
 initial_value = '0000000000000000'
 register_output = [initial_value,initial_value,initial_value,initial_value,initial_value,initial_value,initial_value,initial_value]
@@ -64,7 +70,6 @@ def binaryToDecimal(binary):
 #        decimal = decimal//2
 #        i += 1
 #    return binary
-
 #Type-A Binary encodings
 
 def add(i):
@@ -199,17 +204,16 @@ def cmp(i):
 
 #Type-D Binary encodings
 
-def ld(i):
+def ld(i,variable_number_counter):
     regA = registers[i[6:9]]
-    a = binaryToDecimal(i[9:])
-    dictionary_of_reg_values[regA] = MEM[a]
-    register_values[regA] = binaryToDecimal(dictionary_of_reg_values[regA])
-4
-def st(i):
+    dictionary_of_variables[f"var{variable_number_counter}"]=i[9:]
+    dictionary_of_label_addresses_decimal[f'var{variable_number_counter}']=0
+
+    register_values[regA] = dictionary_of_label_addresses_decimal[f'var{variable_number_counter}']
+def st(i,variable_number_counter):
     regA = registers[i[6:9]]
-    a = binaryToDecimal(i[9:])
-    dictionary_of_reg_values[regA] = MEM[a]
-    register_values[regA] = binaryToDecimal(dictionary_of_reg_values[regA])
+    dictionary_of_variables[f'var{variable_number_counter}']=i[9:]
+    dictionary_of_label_addresses_decimal[f'var{variable_number_counter}']=register_values[regA]
 
 #Type-E Binary encodings
 def jmp(i):
@@ -292,9 +296,11 @@ while(True):
         elif opcode == '01110':
             cmp(MEM[PC])
         elif opcode == '00100':
-            ld(MEM[PC])
+            ld(MEM[PC],variable_number_counter)
+            variable_number_counter+=1
         elif opcode == '00101':
-            st(MEM[PC])
+            st(MEM[PC],variable_number_counter)
+            variable_number_counter+=1
         elif opcode == '01111':
             a = jmp(MEM[PC])
             f1 = 1

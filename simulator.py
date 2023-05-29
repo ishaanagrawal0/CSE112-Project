@@ -205,7 +205,7 @@ def ld(i):
     a = binaryToDecimal(regAddr)
     dictionary_of_reg_values[regA] = MEM[a]
     register_values[regA] = binaryToDecimal(dictionary_of_reg_values[regA])
-
+4
 def st(i):
     regA = registers[i[6:9]]
     regAddr = registers[i[9:]]

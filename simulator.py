@@ -201,15 +201,13 @@ def cmp(i):
 
 def ld(i):
     regA = registers[i[6:9]]
-    regAddr = registers[i[9:]]
-    a = binaryToDecimal(regAddr)
+    a = binaryToDecimal(i[9:])
     dictionary_of_reg_values[regA] = MEM[a]
     register_values[regA] = binaryToDecimal(dictionary_of_reg_values[regA])
 4
 def st(i):
     regA = registers[i[6:9]]
-    regAddr = registers[i[9:]]
-    a = binaryToDecimal(regAddr)
+    a = binaryToDecimal(i[9:])
     dictionary_of_reg_values[regA] = MEM[a]
     register_values[regA] = binaryToDecimal(dictionary_of_reg_values[regA])
 
@@ -246,6 +244,7 @@ def halt(i):
     
 # Floating Point Arithmetic Operations    
 #def addf(i):
+    
     
     
 #def subf(i):
@@ -322,3 +321,16 @@ while(True):
     #a2 = [('0'*(16-len(bin(register_values[i])[2:])))+bin(register_values[i])[2:] for i in register_values.keys()]
     #a1.extend(a2)
     print(a1+" "+dictionary_of_reg_binary["R0"]+" "+dictionary_of_reg_binary["R1"]+" "+dictionary_of_reg_binary["R2"]+" "+dictionary_of_reg_binary["R3"]+" "+dictionary_of_reg_binary["R4"]+" "+dictionary_of_reg_binary["R5"]+" "+dictionary_of_reg_binary["R6"]+" "+dictionary_of_reg_binary["FLAGS"]+" ")
+
+    
+# For the memory Dump after the execution of all lines have ended.    
+j=0    
+for i in MEM:
+    print(i)
+    j+=1
+    
+while(j!=128):
+    print('0'*16)
+    j+=1
+        
+    

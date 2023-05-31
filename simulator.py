@@ -246,15 +246,62 @@ def je(i):
 def halt(i):
     exit()
     
-# Floating Point Arithmetic Operations    
-#def addf(i):
+# Floating Point Arithmetic Operations
+# Assuming the exponent bits go from 0 to +7
+def convert_f(regA):
+    a = binaryToDecimal(dictionary_of_reg_binary[regA][8:11])
+    s = "1."+dictionary_of_reg_values[regA][11:]
+    ptr = 1
+    f5 = 0
+    while(a!=0):
+        if(f5 != 1):
+            try:
+                s = s[:ptr]+s[ptr+1]+s[ptr]+s[ptr+2:]
+            except:
+                s = s[:ptr]+s[ptr+1]+s[ptr]
+                f5 = 1
+        if else(f5 == 1):
+            s+='0'
+        ptr+=1
+        a-=1
+    res = float(s,2)
+    return res
+    
+def addf(i):
+    regA = registers[i[7:10]]
+    regB = registers[i[10:13]]
+    regC = registers[i[13:]]
+    a1 = convert_f(dictionary_of_reg_binary[regB])
+    a2 = convert_f(dictionary_of_reg_binary[regC])
+    
+    if(a1+a2>): #Include the range
+        dictionary_of_reg_binary['111'] = dictionary_of_reg_binary['111'][:12]+'1'+dictionary_of_reg_binary['111'][13:]
+        dictionary_of_reg_binary[regA] = '0'*16;
+    else:
+        register_values[regA] = a1+a2
+        # To be completed
+        # dictionary_of_reg_binary[regA] = bin(register_values[regA])[2:]
+        
+    
+def subf(i):
+    regA = registers[i[7:10]]
+    regB = registers[i[10:13]]
+    regC = registers[i[13:]]
+    a1 = convert_f(dictionary_of_reg_binary[regB])
+    a2 = convert_f(dictionary_of_reg_binary[regC])
+    
+    if(a1<a2): 
+        dictionary_of_reg_binary['111'] = dictionary_of_reg_binary['111'][:12]+'1'+dictionary_of_reg_binary['111'][13:]
+        dictionary_of_reg_binary[regA] = '0'*16;
+    else:
+        register_values[regA] = a1-a2
+        # To be completed
+        # dictionary_of_reg_binary[regA] = bin(register_values[regA])[2:]
     
     
-    
-#def subf(i):
-    
-    
-#def movf(i):
+def movf(i):
+    regA = registers[i[5:8]]
+    dictionary_of_reg_binary[regA] = 8*'0'+i[8:]
     
     
 PC = 0 # Program Counter

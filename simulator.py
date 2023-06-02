@@ -248,6 +248,7 @@ def halt(i):
     
 # Floating Point Arithmetic Operations
 # Assuming the exponent bits go from 0 to +7
+'''
 def convert_f(regA):
     a = binaryToDecimal(dictionary_of_reg_binary[regA][8:11])
     s = "1."+dictionary_of_reg_values[regA][11:]
@@ -303,7 +304,7 @@ def movf(i):
     regA = registers[i[5:8]]
     dictionary_of_reg_binary[regA] = 8*'0'+i[8:]
     
-    
+'''   
 PC = 0 # Program Counter
 f1 = 0 # Flag for PC to be incremented or not
 
@@ -311,6 +312,9 @@ while(True):
     f1 = 0
     if MEM[PC][:5] == '11010':
         #this is halt command
+        a = bin(PC)
+        a1 = ('0'*(7-len(a[2:]))) + str(a[2:])
+        print(a1+"        "+dictionary_of_reg_binary["R0"]+" "+dictionary_of_reg_binary["R1"]+" "+dictionary_of_reg_binary["R2"]+" "+dictionary_of_reg_binary["R3"]+" "+dictionary_of_reg_binary["R4"]+" "+dictionary_of_reg_binary["R5"]+" "+dictionary_of_reg_binary["R6"]+" "+dictionary_of_reg_binary["FLAGS"]+" ")
         for h in MEM:
             print(h) #printin the memory at the end
         break #GC se exit
@@ -373,9 +377,9 @@ while(True):
         PC += 1
     #a2 = [('0'*(16-len(bin(register_values[i])[2:])))+bin(register_values[i])[2:] for i in register_values.keys()]
     #a1.extend(a2)
-    print(a1+" "+dictionary_of_reg_binary["R0"]+" "+dictionary_of_reg_binary["R1"]+" "+dictionary_of_reg_binary["R2"]+" "+dictionary_of_reg_binary["R3"]+" "+dictionary_of_reg_binary["R4"]+" "+dictionary_of_reg_binary["R5"]+" "+dictionary_of_reg_binary["R6"]+" "+dictionary_of_reg_binary["FLAGS"]+" ")
+    print(a1+"        "+dictionary_of_reg_binary["R0"]+" "+dictionary_of_reg_binary["R1"]+" "+dictionary_of_reg_binary["R2"]+" "+dictionary_of_reg_binary["R3"]+" "+dictionary_of_reg_binary["R4"]+" "+dictionary_of_reg_binary["R5"]+" "+dictionary_of_reg_binary["R6"]+" "+dictionary_of_reg_binary["FLAGS"]+" ")
 
-    
+
 # For the memory Dump after the execution of all lines have ended.    
 j=0    
 for i in MEM:

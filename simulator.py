@@ -54,8 +54,8 @@ f1.close()
 
 
 def binaryToDecimal(binary):
-    binary1 = str(binary)
-    decimal, i, n = 0, 0, 0
+    binary1 = str(binary)[::-1]
+    decimal, i, n = 0, 0, 0 
     for i in range(len(binary1)):
         if(binary1[i] == '1'):
             decimal += 2**i
@@ -315,8 +315,6 @@ while(True):
         a = bin(PC)
         a1 = ('0'*(7-len(a[2:]))) + str(a[2:])
         print(a1+"        "+dictionary_of_reg_binary["R0"]+" "+dictionary_of_reg_binary["R1"]+" "+dictionary_of_reg_binary["R2"]+" "+dictionary_of_reg_binary["R3"]+" "+dictionary_of_reg_binary["R4"]+" "+dictionary_of_reg_binary["R5"]+" "+dictionary_of_reg_binary["R6"]+" "+dictionary_of_reg_binary["FLAGS"]+" ")
-        for h in MEM:
-            print(h) #printin the memory at the end
         break #GC se exit
     else:
         opcode = MEM[PC][0:5]

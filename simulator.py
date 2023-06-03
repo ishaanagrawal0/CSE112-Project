@@ -179,8 +179,9 @@ def right_shift(i):
 def mov_reg(i):
     regA = registers[i[10:13]]
     regB = registers[i[13:16]]
-    register_values[regA] = register_values[regB]
+    #register_values[regA] = register_values[regB]
     dictionary_of_reg_binary[regA] = dictionary_of_reg_binary[regB]
+    register_values[regA] = binaryToDecimal(dictionary_of_reg_binary[regA])
     dictionary_of_reg_binary["FLAGS"]='0'*16
     register_values["FLAGS"]=0
 def Invert(i):
@@ -327,6 +328,7 @@ def movf(i):
     
 '''   
 PC = 0 # Program Counter
+PC_PRINTED=0
 f1 = 0 # Flag for PC to be incremented or not
 
 while(True):
@@ -373,25 +375,30 @@ while(True):
             variable_number_counter+=1
         elif opcode == '01111':
             a = jmp(MEM[PC])
+            dictionary_of_reg_binary["FLAGS"]='0'*16
             f1 = 1
         elif opcode == '11100':
             a = jlt(MEM[PC])
             if(a != 0):
                 PC = a
                 f1 = 1 
+            dictionary_of_reg_binary["FLAGS"]='0'*16
         elif opcode == '11101':
             a = jgt(MEM[PC])
             if(a != 0):
                 PC = a
                 f1 = 1
+            dictionary_of_reg_binary["FLAGS"]='0'*16
         elif opcode == '11111':
             a = je(MEM[PC])
             if(a != 0):
                 PC = a
                 f1 = 1
+            dictionary_of_reg_binary["FLAGS"]='0'*16
             
-    a = bin(PC)
+    a = bin(PC_PRINTED)
     a1 = ('0'*(7-len(a[2:]))) + str(a[2:])
+    PC_PRINTED+=1
     if(f1==0):
         PC += 1
     #a2 = [('0'*(16-len(bin(register_values[i])[2:])))+bin(register_values[i])[2:] for i in register_values.keys()]

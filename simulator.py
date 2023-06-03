@@ -375,6 +375,7 @@ while(True):
             variable_number_counter+=1
         elif opcode == '01111':
             a = jmp(MEM[PC])
+            PC=a
             dictionary_of_reg_binary["FLAGS"]='0'*16
             f1 = 1
         elif opcode == '11100':

@@ -81,11 +81,13 @@ def add(i):
     if register_values[regB] + register_values[regC] <= MAX_INT:
         register_values[regA] = register_values[regB] + register_values[regC]
         dictionary_of_reg_binary[regA]=(16-len(str(bin(register_values[regA]))[2:]))*'0'+str(bin(register_values[regA]))[2:]
-        
+        dictionary_of_reg_binary["FLAGS"]='0'*16
+        register_values["FLAGS"]=0
         
     else:
         #Write the FLAGS condition for overflow here.
-        dictionary_of_reg_binary[regF] = dictionary_of_reg_binary[regF][:12]+'1'+dictionary_of_reg_binary[regF][13:]
+        dictionary_of_reg_binary[regF] = '0000000000001000'
+        register_values[regF]=binaryToDecimal(dictionary_of_reg_binary[regF])
         register_values[regA] = 0
         dictionary_of_reg_binary[regA]='0'*16
 
@@ -97,11 +99,13 @@ def sub(i):
     if (register_values[regB]) < register_values[regC]:
         register_values[regA] = 0
         dictionary_of_reg_binary[regA]='0'*16
-        register_values[regF] = register_values[regF][:12]+'1'+register_values[regF][13:]
+        dictionary_of_reg_binary[regF] = '0000000000001000'
+        register_values[regF]=binaryToDecimal(dictionary_of_reg_binary[regF])
     else:
         register_values[regA] =(register_values[regB])-(register_values[regC])
         dictionary_of_reg_binary[regA]=(16-len(str(bin(register_values[regA]))[2:]))*'0'+str(bin(register_values[regA]))[2:]
-        
+        dictionary_of_reg_binary["FLAGS"]='0'*16
+        register_values["FLAGS"]=0
 
 def mul(i):
     regA = registers[i[7:10]]
@@ -111,9 +115,12 @@ def mul(i):
     if (register_values[regB]) * (register_values[regC]) <= MAX_INT:
         register_values[regA] = (register_values[regB]) * (register_values[regC])
         dictionary_of_reg_binary[regA]=(16-len(str(bin(register_values[regA]))[2:]))*'0'+str(bin(register_values[regA]))[2:]
+        dictionary_of_reg_binary["FLAGS"]='0'*16
+        register_values["FLAGS"]=0
     else:
         #Write the FLAGS condition for overflow here.
-        register_values[regF] = register_values[regF][:12]+'1'+register_values[regF][13:]
+        dictionary_of_reg_binary[regF] = '0000000000001000'
+        register_values[regF]=binaryToDecimal(dictionary_of_reg_binary[regF])
         register_values[regA] = 0
         dictionary_of_reg_binary[regA]='0'*16
         
@@ -124,14 +131,16 @@ def xor(i):
     regC = registers[i[13:]]
     register_values[regA] =register_values[regB]^(register_values[regC])
     dictionary_of_reg_binary[regA]=(16-len(str(bin(register_values[regA]))[2:]))*'0'+str(bin(register_values[regA]))[2:]
-
+    dictionary_of_reg_binary["FLAGS"]='0'*16
+    register_values["FLAGS"]=0
 def OR(i):
     regA = registers[i[7:10]]
     regB = registers[i[10:13]]
     regC = registers[i[13:]]
     register_values[regA] =(register_values[regB]) | (register_values[regC])
     dictionary_of_reg_binary[regA]=(16-len(str(bin(register_values[regA]))[2:]))*'0'+str(bin(register_values[regA]))[2:]
-
+    dictionary_of_reg_binary["FLAGS"]='0'*16
+    register_values["FLAGS"]=0
 
 def AND(i):
     regA = registers[i[7:10]]
@@ -139,7 +148,8 @@ def AND(i):
     regC = registers[i[13:]]
     register_values[regA] =(register_values[regB]) & (register_values[regC])
     dictionary_of_reg_binary[regA]=(16-len(str(bin(register_values[regA]))[2:]))*'0'+str(bin(register_values[regA]))[2:]
-    
+    dictionary_of_reg_binary["FLAGS"]='0'*16
+    register_values["FLAGS"]=0
 #Type-B Binary encodings
 
 def mov_imm(i):
@@ -148,19 +158,22 @@ def mov_imm(i):
     # register_values[regA] = int(imm)
     register_values[regA] = binaryToDecimal(imm)
     dictionary_of_reg_binary[regA] = (16-len(bin(register_values[regA])[2:]))*'0' + bin(register_values[regA])[2:]
-    
+    dictionary_of_reg_binary["FLAGS"]='0'*16
+    register_values["FLAGS"]=0
 def left_shift(i):
     regA = registers[i[6:9]]
     imm = i[9:15]
     register_values[regA] = binaryToDecimal(imm) << 1
     dictionary_of_reg_binary[regA] = (16-len(bin(register_values[regA])[2:]))*'0' + bin(register_values[regA])[2:]
-
+    dictionary_of_reg_binary["FLAGS"]='0'*16
+    register_values["FLAGS"]=0
 def right_shift(i):
     regA = registers[i[6:9]]
     imm = i[13:16]
     register_values[regA] = binaryToDecimal(imm) >> 1
     dictionary_of_reg_binary[regA] = (16-len(bin(register_values[regA])[2:]))*'0' + bin(register_values[regA])[2:]
-
+    dictionary_of_reg_binary["FLAGS"]='0'*16
+    register_values["FLAGS"]=0
 #Type-C Binary encodings
 
 def mov_reg(i):
@@ -168,19 +181,22 @@ def mov_reg(i):
     regB = registers[i[13:16]]
     register_values[regA] = register_values[regB]
     dictionary_of_reg_binary[regA] = dictionary_of_reg_binary[regB]
-    
+    dictionary_of_reg_binary["FLAGS"]='0'*16
+    register_values["FLAGS"]=0
 def Invert(i):
     regA = registers[i[10:13]]
     regB = registers[i[13:16]]
     register_values[regA] = ~ binaryToDecimal(register_values[regB]) # binaryToDecimal((2**16)-binaryToDecimal(register_values[regB])-1)
     dictionary_of_reg_binary[regA] = (16-len(bin(register_values[regA])[2:]))*'0' + bin(register_values[regA])[2:]
-
+    dictionary_of_reg_binary["FLAGS"]='0'*16
+    register_values["FLAGS"]=0
 def Divide(i):
     regA = registers[i[10:13]]
     regB = registers[i[13:]]
     regF = registers["111"]
     if(register_values[regB] == 0):
-        register_values[regF] = register_values[regF][:12]+'1'+register_values[regF][13:]
+        dictionary_of_reg_binary[regF] = '0000000000001000'
+        register_values[regF]=binaryToDecimal(dictionary_of_reg_binary[regF])
         register_values['000'] = 0
         dictionary_of_reg_binary['000'] = '0'*16
         register_values['001'] = 0
@@ -190,17 +206,18 @@ def Divide(i):
         dictionary_of_reg_binary[registers['000']] = (16-len(bin(register_values[regA])[2:]))*'0' + bin(register_values[regA])[2:]
         register_values['001'] = register_values[regA]%register_values[regB]
         dictionary_of_reg_binary[registers['000']] = (16-len(bin(register_values[regB])[2:]))*'0' + bin(register_values[regB])[2:]
-
+        dictionary_of_reg_binary["FLAGS"]='0'*16
+        register_values["FLAGS"]=0
 def cmp1(i):
     regA = registers[i[10:13]]
     regB = registers[i[13:]]
     regF = registers["111"]
     if register_values[regA] > register_values[regB]:
-        register_values[regF] = '0000000000000010'
+        dictionary_of_reg_binary[regF] = '0000000000000010'
     elif register_values[regA] < register_values[regB]:
-        register_values[regF] = '0000000000000100'
+        dictionary_of_reg_binary[regF] = '0000000000000100'
     else:
-        register_values[regF] = '0000000000000001'
+        dictionary_of_reg_binary[regF] = '0000000000000001'
 
 #Type-D Binary encodings
 
@@ -210,10 +227,14 @@ def ld(i,variable_number_counter):
     dictionary_of_label_addresses_decimal[f'var{variable_number_counter}']=0
 
     register_values[regA] = dictionary_of_label_addresses_decimal[f'var{variable_number_counter}']
+    dictionary_of_reg_binary["FLAGS"]='0'*16
+    register_values["FLAGS"]=0
 def st(i,variable_number_counter):
     regA = registers[i[6:9]]
     dictionary_of_variables[f'var{variable_number_counter}']=i[9:]
     dictionary_of_label_addresses_decimal[f'var{variable_number_counter}']=register_values[regA]
+    dictionary_of_reg_binary["FLAGS"]='0'*16
+    register_values["FLAGS"]=0
 
 #Type-E Binary encodings
 def jmp(i):

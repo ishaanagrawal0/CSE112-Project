@@ -214,6 +214,52 @@ def Jump_If_Equal(Mem_addr):
     s+=x
     return s
 
+def movf(reg1,Imm):
+    s = "10000"
+    s += registers[reg1]
+    i = Imm.find('.')
+    a1 = "0."+Imm[i:]
+    a2 = ''
+    a3 = str(bin(int(Imm[:i]))[2:])
+    i = len(a3)
+    j = 0
+    res = 0
+    
+    while(j<5):
+        res = int(a1)*2
+        a2 += str(res)[0]
+        a1 = '0'+str(res)[1:]
+        j+=1
+    
+    a3 += '0'+a2
+    exp = 0
+    while(a3[1] != '.'):
+        a3 = a3[:i-1] + '.' + a3[i-1] + a3[i+1:]
+        exp += 1
+      
+    s += str(bin(exp)[2:])
+    s += a3[2:]
+    while(len(s) != 16):
+        s+='0'
+    return s
+    
+
+def addf(reg1,reg2,reg3):
+    s = "10001"
+    s += "0"*2
+    s += registers[reg1]
+    s += registers[reg2]
+    s += registers[reg3]
+    return s
+
+def addf(reg1,reg2,reg3):
+    s = "10010"
+    s += "0"*2
+    s += registers[reg1]
+    s += registers[reg2]
+    s += registers[reg3]
+    return s
+    
 def Halt():
     #hlt
     s="11010"
@@ -341,7 +387,38 @@ for line in lines:
         print(Store(words[1],words[2]))
         f2.write(Store(words[1],words[2]))
         f2.write("\n")
-    
+        
+    elif words[0] in ["addf","subf","movf"]: #Considering the range for exponent to be 0 to +7
+        if(words[0] == "movf"):
+            f2.write(movf(words[1],words[2][1:]))
+        elif(words[0] == "addf"):
+            try:
+                # Add the assert statement for checking whether any of the three registers is flags for addf and subf.
+                if(dictionary_of_reg_values(words[2])+dictionary_of_reg_values(words[3]) > 252): # By converting the binary 1.11111 x 2^7
+                    dictionary_of_reg_binary["FLAGS"] = dictionary_of_reg_binary["FLAGS"][:12] + "1" + dictionary_of_reg_binary["FLAGS"][13:]
+                    dictionary_of_reg_values[words[1]] = 0
+                    dictionary_of_reg_binary[words[1]] = "0"*16
+                else:
+                    dictionary_of_reg_values[words[1]] = dictionary_of_reg_values[words[2]] + dictionary_of_reg_values[[words[3]]]
+                
+                f2.write(addf(words[1],words[2],words[3]))
+            except:
+                print("Error - FLAGS register cannot be used in the floating point addition operation.")
+        elif(words[0] == "subf"):
+            try:
+                # Add the assert statement for checking whether any of the three registers is flags for addf and subf.
+                if(dictionary_of_reg_values(words[2]) < dictionary_of_reg_values(words[3])): # By converting the binary 1.11111 x 2^7
+                    dictionary_of_reg_binary["FLAGS"] = dictionary_of_reg_binary["FLAGS"][:12] + "1" + dictionary_of_reg_binary["FLAGS"][13:]
+                    dictionary_of_reg_values[words[1]] = 0
+                    dictionary_of_reg_binary[words[1]] = "0"*16
+                else:
+                    dictionary_of_reg_values[words[1]] = dictionary_of_reg_values[words[2]] - dictionary_of_reg_values[[words[3]]]
+                
+                f2.write(subf(words[1],words[2],words[3]))
+            except:
+                print("Error - FLAGS register cannot be used in the floating point addition operation.")        
+                
+                
     #TYPE A COMMANDS
     
     elif words[0]=="add":

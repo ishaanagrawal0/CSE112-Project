@@ -386,7 +386,7 @@ for line in lines:
         
     elif words[0] in ["addf","subf","movf"]: #Considering the range for exponent to be 0 to +7
         if(words[0] == "movf"):
-            f2.write(movf(words))
+            f2.write(movf(words[1],words[2][1:]))
         elif(words[0] == "addf"):
             try:
                 # Add the assert statement for checking whether any of the three registers is flags for addf and subf.
@@ -397,7 +397,7 @@ for line in lines:
                 else:
                     dictionary_of_reg_values[words[1]] = dictionary_of_reg_values[words[2]] + dictionary_of_reg_values[[words[3]]]
                 
-                f2.write(addf(words))
+                f2.write(addf(words[1],words[2],words[3]))
             except:
                 print("Error - FLAGS register cannot be used in the floating point addition operation.")
         elif(words[0] == "subf"):
@@ -410,7 +410,7 @@ for line in lines:
                 else:
                     dictionary_of_reg_values[words[1]] = dictionary_of_reg_values[words[2]] - dictionary_of_reg_values[[words[3]]]
                 
-                f2.write(subf(words))
+                f2.write(subf(words[1],words[2],words[3]))
             except:
                 print("Error - FLAGS register cannot be used in the floating point addition operation.")        
                 

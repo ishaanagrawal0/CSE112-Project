@@ -295,7 +295,11 @@ for line in lines:
                 dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
                 dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
                 var = MoveImmediate(words[1],words[2][1:])
+                if int(words[2][1:])>127:
+                    print("error value more than 127")
+                    exit()
                 print(var)
+                
                 if var[0:5] != 'ERROR':
                     f2.write(var)
                     f2.write("\n")
@@ -349,6 +353,7 @@ for line in lines:
             flags="0"*16 # reset to zero
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
+        
         print(Addition(words[1],words[2],words[3]))
         f2.write(Addition(words[1],words[2],words[3]))
         f2.write("\n")

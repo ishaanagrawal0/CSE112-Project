@@ -4,7 +4,7 @@ Debjit Banerji 2022146
 Himang Chandra Garg 2022214
 Ishaan Agrawal 2022221
 '''
-
+import sys
 MAX_INT=(2**16-1)
 registers={
     "000": "R0",
@@ -45,11 +45,12 @@ variable_number_counter=1
 initial_value = '0000000000000000'
 register_output = [initial_value,initial_value,initial_value,initial_value,initial_value,initial_value,initial_value,initial_value]
 
-f1 = open(r"C:\Users\adity\Downloads\stdout.txt", "r")
-MEM = f1.readlines()
+#f1 = open(r"C:\Users\adity\Downloads\stdout.txt", "r")
+#MEM = f1.readlines()
+MEM=sys.stdin.readlines()
 for i in range(len(MEM)):
     MEM[i] = MEM[i].strip()  # for the extra spaces(if any in the binary code)
-f1.close()
+#f1.close()
 #print(MEM)
 
 

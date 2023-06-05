@@ -410,10 +410,14 @@ while(True):
 
 # For the memory Dump after the execution of all lines have ended.    
 j=0    
+
+
 for i in MEM:
     print(i)
     j+=1
-    
+for g in dictionary_of_label_addresses_decimal:
+    print((16-len(bin(dictionary_of_label_addresses_decimal[g])[2:]))*'0'+bin(dictionary_of_label_addresses_decimal[g])[2:])
+    j+=1
 while(j!=128):
     print('0'*16)
     j+=1

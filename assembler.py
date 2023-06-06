@@ -34,8 +34,8 @@ list_of_variables=[]
 #Empty line: Ignore these lines
 #A label
 #An instruction
-f1=open(r"C:\Users\adity\Downloads\stdin.txt",'r')
-lines=f1.readlines()
+#f1=open(r"C:\Users\adity\Downloads\stdin.txt",'r')
+#lines=f1.readlines()
 lines=sys.stdin.readlines()
 
 def decimal_converter(num):

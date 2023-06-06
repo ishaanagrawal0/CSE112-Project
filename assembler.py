@@ -28,14 +28,62 @@ halt_finder=0 #Flag to check whether halt instruction was read or not
 MAX_INT=(2**16-1)
 dictionary_of_label_addresses_decimal={}
 
+
+    
 list_of_variables=[]
 #Empty line: Ignore these lines
 #A label
 #An instruction
 #A variable definition
-
-lines=sys.stdin.readlines()
+f1=open(r"C:\Users\adity\Downloads\stdin.txt",'r')
+lines=f1.readlines()
 # print(lines)
+
+def decimal_converter(num):
+    while num > 1:
+        num /= 10
+    return num
+def float_bin(number, places = 3):
+    if (float(number)==0):
+        return '00000'
+    # split() separates whole number and decimal
+    # part and stores it in two separate variables
+    whole, dec = str(number).split(".")
+ 
+    # Convert both whole number and decimal 
+    # part from string type to integer type
+    whole = int(whole)
+    dec = int (dec)
+ 
+    # Convert the whole number part to it's
+    # respective binary form and remove the
+    # "0b" from it.
+    res = bin(whole).lstrip("0b") + "."
+ 
+    # Iterate the number of times, we want
+    # the number of decimal places to be
+    for x in range(places):
+ 
+        # Multiply the decimal value by 2
+        # and separate the whole number part
+        # and decimal part
+        try:
+            whole, dec = str((decimal_converter(dec)) * 2).split(".")
+        except:
+            ValueError
+            break
+ 
+        # Convert the decimal part
+        # to integer again
+        dec = int(dec)
+ 
+        # Keep adding the integer parts
+        # receive to the result variable
+        res += whole
+    res=str(res).replace(".","")
+    res=res+(5-len(res))*'0'
+    return res
+
 def MoveImmediate(reg1,Imm):
     #format is mov reg1 $Imm
     s="00010"
@@ -215,32 +263,22 @@ def Jump_If_Equal(Mem_addr):
     return s
 
 def movf(reg1,Imm):
-    s = "10000"
-    s += registers[reg1]
-    i = Imm.find('.')
-    a1 = "0."+Imm[i:]
-    a2 = ''
-    a3 = str(bin(int(Imm[:i]))[2:])
-    i = len(a3)
-    j = 0
-    res = 0
-    
-    while(j<5):
-        res = int(a1)*2
-        a2 += str(res)[0]
-        a1 = '0'+str(res)[1:]
-        j+=1
-    
-    a3 += '0'+a2
-    exp = 0
-    while(a3[1] != '.'):
-        a3 = a3[:i-1] + '.' + a3[i-1] + a3[i+1:]
-        exp += 1
-      
-    s += str(bin(exp)[2:])
-    s += a3[2:]
-    while(len(s) != 16):
-        s+='0'
+    s = "10010" #no unused bit needed
+    Imm=float(Imm)
+    if Imm>1:
+        exponent_part=0
+    else:
+        exponent_part=-3
+    while(Imm//(2**(exponent_part))!=1):
+        exponent_part+=1
+    print(exponent_part)
+
+    number_left=(Imm/2**(exponent_part))-1
+    #print(float_bin(number_left,5))
+    mantissa=float_bin(number_left,5)
+    s+= registers[reg1]
+    s+= (3-len(bin(exponent_part)[2:]))*'0'+bin(exponent_part)[2:]
+    s+= (mantissa)
     return s
     
 
@@ -388,9 +426,16 @@ for line in lines:
         f2.write(Store(words[1],words[2]))
         f2.write("\n")
         
-    elif words[0] in ["addf","subf","movf"]: #Considering the range for exponent to be 0 to +7
+    elif words[0] in ["addf","subf","movf"]: #Considering the range for exponent to be -3 to +4
         if(words[0] == "movf"):
-            f2.write(movf(words[1],words[2][1:]))
+            #print(words[2])
+            #print(float(words[2][1:]))
+            if (float(words[2][1:])>=0.125 and float(words[2][1:])<=31.5):
+                print(movf(words[1],words[2][1:]))
+            
+            else:
+                print("the immediate value of floating point is not in the correct bounds(1.5 to 31.5)")
+            
         elif(words[0] == "addf"):
             try:
                 # Add the assert statement for checking whether any of the three registers is flags for addf and subf.

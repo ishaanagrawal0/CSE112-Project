@@ -54,30 +54,19 @@ def float_bin(number, places = 3):
     whole = int(whole)
     dec = int (dec)
  
-    # Convert the whole number part to it's
-    # respective binary form and remove the
-    # "0b" from it.
     res = bin(whole).lstrip("0b") + "."
  
-    # Iterate the number of times, we want
-    # the number of decimal places to be
+
     for x in range(places):
- 
-        # Multiply the decimal value by 2
-        # and separate the whole number part
-        # and decimal part
+        
         try:
             whole, dec = str((decimal_converter(dec)) * 2).split(".")
         except:
             ValueError
             break
  
-        # Convert the decimal part
-        # to integer again
         dec = int(dec)
- 
-        # Keep adding the integer parts
-        # receive to the result variable
+
         res += whole
     res=str(res).replace(".","")
     res=res+(5-len(res))*'0'
@@ -262,6 +251,8 @@ def Jump_If_Equal(Mem_addr):
     s+=x
     return s
 
+
+def movf(reg1,Imm):
     s = "10010" #no unused bit needed
     Imm=float(Imm)
     if Imm>1:
@@ -278,10 +269,10 @@ def Jump_If_Equal(Mem_addr):
     s+= registers[reg1]
     s+= (3-len(bin(exponent_part)[2:]))*'0'+bin(exponent_part)[2:]
     s+= (mantissa)
-        s+='0'
     return s
     
 
+def addf(reg1,reg2,reg3):
     s = "10000"
     s = "10001"
     s += "0"*2
@@ -426,16 +417,15 @@ for line in lines:
         f2.write(Store(words[1],words[2]))
         f2.write("\n")
     elif words[0] in ["addf","subf","movf"]: #Considering the range for exponent to be -3 to +4
-    elif words[0] in ["addf","subf","movf"]: #Considering the range for exponent to be 0 to +7
             #print(words[2])
             #print(float(words[2][1:]))
+        if words[0]=='movf':
             if (float(words[2][1:])>=0.125 and float(words[2][1:])<=31.5):
                 print(movf(words[1],words[2][1:]))
             
             else:
                 print("the immediate value of floating point is not in the correct bounds(1.5 to 31.5)")
             
-            f2.write(movf(words[1],words[2][1:]))
         elif(words[0] == "addf"):
             try:
                 # Add the assert statement for checking whether any of the three registers is flags for addf and subf.
@@ -446,7 +436,7 @@ for line in lines:
                 else:
                     dictionary_of_reg_values[words[1]] = dictionary_of_reg_values[words[2]] + dictionary_of_reg_values[[words[3]]]
                 
-                f2.write(addf(words[1],words[2],words[3]))
+                #f2.write(addf(words[1],words[2],words[3]))
             except:
                 print("Error - FLAGS register cannot be used in the floating point addition operation.")
         elif(words[0] == "subf"):

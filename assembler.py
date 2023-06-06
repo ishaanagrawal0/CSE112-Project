@@ -298,7 +298,7 @@ def Halt():
 
 # Function to check whether the name of register is correct or not
 def check_reg(reg1):
-    if (reg1 in registers): #and(reg1!="FLAGS"):
+    if (reg1 in registers) and (reg1!="FLAGS"):
         return 1
     return 0
 
@@ -337,7 +337,7 @@ for line in lines:
         print("Error - Halt not used as last instruction (Line No.: "+str(i)+")")
      
     if words[0] in ["add","sub","mul","xor","or","and"]:
-       if(not(check_reg(words[1])) and not(check_reg(words[2])) and not(check_reg(words[3]))):
+       if(not(check_reg(words[1])) or not(check_reg(words[2])) or not(check_reg(words[3]))):
         print("Error - Use of invalid register(s) (Line No.: "+str(i)+")")
         i+=1
         continue
@@ -347,7 +347,7 @@ for line in lines:
             i+=1
             continue
     elif words[0] in ["div","not","cmp"]:
-        if(not(check_reg(words[1])) and not(check_reg(words[2]))):
+        if(not(check_reg(words[1])) or not(check_reg(words[2]))):
             print("Error - Use of invalid register(s) (Line No.: "+str(i)+")")
             i+=1
             continue
@@ -385,7 +385,7 @@ for line in lines:
                 break           
             
         else:
-            if (check_reg(words[1]) and check_reg(words[2])):
+            if check_reg(words[1]):
                 dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[2]]
                 dictionary_of_reg_binary[words[1]]=dictionary_of_reg_binary[words[2]]
                 print(MoveRegister(words[1],words[2]))

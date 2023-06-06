@@ -185,7 +185,7 @@ def mov_reg(i):
     register_values[regA] = binaryToDecimal(dictionary_of_reg_binary[regA])
     dictionary_of_reg_binary["FLAGS"]='0'*16
     register_values["FLAGS"]=0
-def Invert(i):
+def Invert(i): 
     regA = registers[i[10:13]]
     regB = registers[i[13:16]]
     register_values[regA] = ~ binaryToDecimal(register_values[regB]) # binaryToDecimal((2**16)-binaryToDecimal(register_values[regB])-1)
@@ -270,64 +270,130 @@ def halt(i):
     exit()
     
 # Floating Point Arithmetic Operations
-# Assuming the exponent bits go from 0 to +7
-'''
-def convert_f(regA):
-    a = binaryToDecimal(dictionary_of_reg_binary[regA][8:11])
-    s = "1."+dictionary_of_reg_values[regA][11:]
-    ptr = 1
-    f5 = 0
-    while(a!=0):
-        if(f5 != 1):
-            try:
-                s = s[:ptr]+s[ptr+1]+s[ptr]+s[ptr+2:]
-            except:
-                s = s[:ptr]+s[ptr+1]+s[ptr]
-                f5 = 1
-        if else(f5 == 1):
-            s+='0'
-        ptr+=1
-        a-=1
-    res = float(s,2)
+# Assuming the exponent bits go from -3 to +4
+def decimal_converter(num):
+    while num > 1:
+        num /= 10
+    return num
+def float_bin(number, places = 3):
+    if (float(number)==0):
+        return '00000'
+    # split() separates whole number and decimal
+    # part and stores it in two separate variables
+    whole, dec = str(number).split(".")
+ 
+    # Convert both whole number and decimal 
+    # part from string type to integer type
+    whole = int(whole)
+    dec = int (dec)
+ 
+    res = bin(whole).lstrip("0b") + "."
+ 
+
+    for x in range(places):
+        
+        try:
+            whole, dec = str((decimal_converter(dec)) * 2).split(".")
+        except:
+            ValueError
+            break
+ 
+        dec = int(dec)
+
+        res += whole
+    res=str(res).replace(".","")
+    res=res+(5-len(res))*'0'
     return res
+
+def floating_conversion_from_bit(bits):
+    exponent=binaryToDecimal(bits[:3])
+    i= (-1)
+    mantissa_decimal=0
+    for g in bits[3:]:
+        if g=='1':
+            mantissa_decimal+=2**(i)
+        i-=1
+    ans=(1+mantissa_decimal)*(2)**(exponent-3) # 3 is the bias
+    
+    return ans
+        
     
 def addf(i):
     regA = registers[i[7:10]]
     regB = registers[i[10:13]]
     regC = registers[i[13:]]
-    a1 = convert_f(dictionary_of_reg_binary[regB])
-    a2 = convert_f(dictionary_of_reg_binary[regC])
-    
-    if(a1+a2>): #Include the range
-        dictionary_of_reg_binary['111'] = dictionary_of_reg_binary['111'][:12]+'1'+dictionary_of_reg_binary['111'][13:]
-        dictionary_of_reg_binary[regA] = '0'*16;
+    regF = registers['111']
+    if  register_values[regB] + register_values[regC] < 31.5:
+        register_values[regA] = register_values[regB] + register_values[regC]
+        if register_values[regA]>1:
+            exponent_part=0
+        else:
+            exponent_part= (-3)
+        while(register_values[regA]//(2**(exponent_part))!=1):
+            exponent_part+=1
+        #print(exponent_part)
+
+        number_left=(register_values[regA]/2**(exponent_part))-1
+        #print(float_bin(number_left,5))
+        mantissa=float_bin(number_left,5)
+        exponent_part+=3
+        dictionary_of_reg_binary[regA]=8*'0'+(3-len(bin(exponent_part)[2:]))*'0'+bin(exponent_part)[2:]+mantissa
+        dictionary_of_reg_binary["FLAGS"]='0'*16
+        register_values["FLAGS"]=0
     else:
-        register_values[regA] = a1+a2
-        # To be completed
-        # dictionary_of_reg_binary[regA] = bin(register_values[regA])[2:]
-        
-    
+        dictionary_of_reg_binary[regF] = '0000000000001000'
+        register_values[regF]=binaryToDecimal(dictionary_of_reg_binary[regF])
+        register_values[regA] = 0
+        dictionary_of_reg_binary[regA]='0'*16
+
 def subf(i):
     regA = registers[i[7:10]]
     regB = registers[i[10:13]]
     regC = registers[i[13:]]
-    a1 = convert_f(dictionary_of_reg_binary[regB])
-    a2 = convert_f(dictionary_of_reg_binary[regC])
-    
-    if(a1<a2): 
-        dictionary_of_reg_binary['111'] = dictionary_of_reg_binary['111'][:12]+'1'+dictionary_of_reg_binary['111'][13:]
-        dictionary_of_reg_binary[regA] = '0'*16;
+    regF = registers['111']
+    if register_values[regB] - register_values[regC] > 0.125: # for the overflow in the floating point case we have considered for the 0.125 case which is (1.00000 * 2^(-3))
+        register_values[regA]=register_values[regB]-register_values[regC]
+        if register_values[regA]>1:
+            exponent_part=0
+        else:
+            exponent_part= (-3)
+        while(register_values[regA]//(2**(exponent_part))!=1):
+            exponent_part+=1
+        #print(exponent_part)
+
+        number_left=(register_values[regA]/2**(exponent_part))-1
+        #print(float_bin(number_left,5))
+        mantissa=float_bin(number_left,5)
+        exponent_part+=3
+        dictionary_of_reg_binary[regA]=8*'0'+(3-len(bin(exponent_part)[2:]))*'0'+bin(exponent_part)[2:]+mantissa
+        dictionary_of_reg_binary["FLAGS"]='0'*16
+        register_values["FLAGS"]=0
     else:
-        register_values[regA] = a1-a2
-        # To be completed
-        # dictionary_of_reg_binary[regA] = bin(register_values[regA])[2:]
-    
-    
+        dictionary_of_reg_binary[regF] = '0000000000001000'
+        register_values[regF]=binaryToDecimal(dictionary_of_reg_binary[regF])
+        register_values[regA] = 0
+        dictionary_of_reg_binary[regA]='0'*16
+        
+
 def movf(i):
-    regA = registers[i[5:8]]
-    dictionary_of_reg_binary[regA] = 8*'0'+i[8:]
+    regA=registers[i[5:8]]
+    decimal_value=floating_conversion_from_bit(i[8:])
+    register_values[regA]=decimal_value
     
-'''   
+    dictionary_of_reg_binary[regA]=8*'0'+i[8:]    
+    dictionary_of_reg_binary["FLAGS"]='0'*16
+    register_values["FLAGS"]=0
+    
+    
+        
+    
+        
+        
+
+    
+    
+    
+    
 PC = 0 # Program Counter
 PC_PRINTED=0
 f1 = 0 # Flag for PC to be incremented or not
@@ -336,6 +402,8 @@ while(True):
     f1 = 0
     if MEM[PC][:5] == '11010':
         #this is halt command
+        dictionary_of_reg_binary['FLAGS']=16*'0'
+        register_values['FLAGS']=0
         a = bin(PC)
         a1 = ('0'*(7-len(a[2:]))) + str(a[2:])
         print(a1+"        "+dictionary_of_reg_binary["R0"]+" "+dictionary_of_reg_binary["R1"]+" "+dictionary_of_reg_binary["R2"]+" "+dictionary_of_reg_binary["R3"]+" "+dictionary_of_reg_binary["R4"]+" "+dictionary_of_reg_binary["R5"]+" "+dictionary_of_reg_binary["R6"]+" "+dictionary_of_reg_binary["FLAGS"]+" ")
@@ -397,6 +465,19 @@ while(True):
                 PC = a
                 f1 = 1
             dictionary_of_reg_binary["FLAGS"]='0'*16
+        
+        elif opcode=="10000": #this is for the F_ADDITION
+            addf(MEM[PC])
+        
+        elif opcode == "10001":
+            subf(MEM[PC])
+        
+        elif opcode == "10010":
+            movf(MEM[PC])
+            
+            
+        
+            
             
     a = bin(PC_PRINTED)
     a1 = ('0'*(7-len(a[2:]))) + str(a[2:])

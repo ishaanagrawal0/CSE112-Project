@@ -215,7 +215,7 @@ def Jump_If_Equal(Mem_addr):
     return s
 
 def movf(reg1,Imm):
-    s = "10000"
+    s = "10010"
     s += registers[reg1]
     i = Imm.find('.')
     a1 = "0."+Imm[i:]
@@ -245,15 +245,15 @@ def movf(reg1,Imm):
     
 
 def addf(reg1,reg2,reg3):
-    s = "10001"
+    s = "10000"
     s += "0"*2
     s += registers[reg1]
     s += registers[reg2]
     s += registers[reg3]
     return s
 
-def addf(reg1,reg2,reg3):
-    s = "10010"
+def subf(reg1,reg2,reg3):
+    s = "10001"
     s += "0"*2
     s += registers[reg1]
     s += registers[reg2]

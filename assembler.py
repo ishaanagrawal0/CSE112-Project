@@ -613,7 +613,7 @@ if halt_finder!=1:
     
 # Create separate if else blocks to check for valid register names for command types - A,B,C,D
 
-f2.close()
+#f2.close()
 
 #print(dictionary_of_variables)
 #print(dictionary_of_label_addresses_decimal)

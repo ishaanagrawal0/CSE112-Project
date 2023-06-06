@@ -444,7 +444,7 @@ for line in lines:
                 print("Error - FLAGS register cannot be used in the floating point addition operation.")
         elif(words[0] == "subf"):
             if (words[1]!='FLAGS' and words[2]!='FLAGS' and words[3]!='FLAGS'):
-                if(dictionary_of_reg_values[words[2]] < dictionary_of_reg_values[words[3]]): # By converting the binary 1.11111 x 2^4
+                if(dictionary_of_reg_values[words[2]] - dictionary_of_reg_values[words[3]]<0.125): # By converting the binary 1.11111 x 2^4
                     dictionary_of_reg_binary["FLAGS"] = '0000000000001000'
                     dictionary_of_reg_values[words[1]] = 0
                     dictionary_of_reg_binary[words[1]] = "0"*16
@@ -618,4 +618,4 @@ if halt_finder!=1:
 #print(dictionary_of_variables)
 #print(dictionary_of_label_addresses_decimal)
 #print(dictionary_of_reg_values)
-#print(dictionary_of_reg_binary)
+#print(dictionary_of_reg_binarys)

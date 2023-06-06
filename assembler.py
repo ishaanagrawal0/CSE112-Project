@@ -28,16 +28,15 @@ halt_finder=0 #Flag to check whether halt instruction was read or not
 MAX_INT=(2**16-1)
 dictionary_of_label_addresses_decimal={}
 
-
     
+
 list_of_variables=[]
 #Empty line: Ignore these lines
 #A label
 #An instruction
-#A variable definition
 f1=open(r"C:\Users\adity\Downloads\stdin.txt",'r')
 lines=f1.readlines()
-# print(lines)
+lines=sys.stdin.readlines()
 
 def decimal_converter(num):
     while num > 1:
@@ -84,6 +83,7 @@ def float_bin(number, places = 3):
     res=res+(5-len(res))*'0'
     return res
 
+# print(lines)
 def MoveImmediate(reg1,Imm):
     #format is mov reg1 $Imm
     s="00010"
@@ -262,7 +262,6 @@ def Jump_If_Equal(Mem_addr):
     s+=x
     return s
 
-def movf(reg1,Imm):
     s = "10010" #no unused bit needed
     Imm=float(Imm)
     if Imm>1:
@@ -279,18 +278,19 @@ def movf(reg1,Imm):
     s+= registers[reg1]
     s+= (3-len(bin(exponent_part)[2:]))*'0'+bin(exponent_part)[2:]
     s+= (mantissa)
+        s+='0'
     return s
     
 
-def addf(reg1,reg2,reg3):
+    s = "10000"
     s = "10001"
     s += "0"*2
     s += registers[reg1]
     s += registers[reg2]
     s += registers[reg3]
     return s
-
-def addf(reg1,reg2,reg3):
+def subf(reg1,reg2,reg3):
+    s = "10001"
     s = "10010"
     s += "0"*2
     s += registers[reg1]
@@ -425,9 +425,8 @@ for line in lines:
         print(Store(words[1],words[2]))
         f2.write(Store(words[1],words[2]))
         f2.write("\n")
-        
     elif words[0] in ["addf","subf","movf"]: #Considering the range for exponent to be -3 to +4
-        if(words[0] == "movf"):
+    elif words[0] in ["addf","subf","movf"]: #Considering the range for exponent to be 0 to +7
             #print(words[2])
             #print(float(words[2][1:]))
             if (float(words[2][1:])>=0.125 and float(words[2][1:])<=31.5):
@@ -436,6 +435,7 @@ for line in lines:
             else:
                 print("the immediate value of floating point is not in the correct bounds(1.5 to 31.5)")
             
+            f2.write(movf(words[1],words[2][1:]))
         elif(words[0] == "addf"):
             try:
                 # Add the assert statement for checking whether any of the three registers is flags for addf and subf.

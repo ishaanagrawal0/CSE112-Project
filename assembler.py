@@ -444,7 +444,7 @@ for line in lines:
                 print("Error - FLAGS register cannot be used in the floating point addition operation.")
         elif(words[0] == "subf"):
             if (words[1]!='FLAGS' and words[2]!='FLAGS' and words[3]!='FLAGS'):
-                if(dictionary_of_reg_values[words[2]] - dictionary_of_reg_values[words[3]]<0.125): # By converting the binary 1.11111 x 2^4
+                if(dictionary_of_reg_values[words[2]] < dictionary_of_reg_values[words[3]]): # By converting the binary 1.11111 x 2^4
                     dictionary_of_reg_binary["FLAGS"] = '0000000000001000'
                     dictionary_of_reg_values[words[1]] = 0
                     dictionary_of_reg_binary[words[1]] = "0"*16
@@ -505,19 +505,19 @@ for line in lines:
             flags="0"*(12)+"1"+"0"*(3)
         else:
             flags="0"*16
-        dictionary_of_reg_values["R0"]=dictionary_of_reg_values[words[1]]//dictionary_of_reg_values[words[2]]
-        dictionary_of_reg_values["R1"]=dictionary_of_reg_values[words[1]]%dictionary_of_reg_values[words[2]]
-        dictionary_of_reg_binary["R0"]=str(bin(dictionary_of_reg_values["R0"])[2:])
-        dictionary_of_reg_binary["R0"]="0"*(16-len(dictionary_of_reg_binary["R0"]))+dictionary_of_reg_binary[words[1]]
-        dictionary_of_reg_binary["R1"]=str(bin(dictionary_of_reg_values["R1"])[2:])
-        dictionary_of_reg_binary["R1"]="0"*(16-len(dictionary_of_reg_binary["R1"]))+dictionary_of_reg_binary[words[1]]
+        #dictionary_of_reg_values["R0"]=dictionary_of_reg_values[words[1]]//dictionary_of_reg_values[words[2]]
+        #dictionary_of_reg_values["R1"]=dictionary_of_reg_values[words[1]]%dictionary_of_reg_values[words[2]]
+        #dictionary_of_reg_binary["R0"]=str(bin(dictionary_of_reg_values["R0"])[2:])
+        #dictionary_of_reg_binary["R0"]="0"*(16-len(dictionary_of_reg_binary["R0"]))+dictionary_of_reg_binary[words[1]]
+        #dictionary_of_reg_binary["R1"]=str(bin(dictionary_of_reg_values["R1"])[2:])
+        #dictionary_of_reg_binary["R1"]="0"*(16-len(dictionary_of_reg_binary["R1"]))+dictionary_of_reg_binary[words[1]]
         print(Divide(words[1],words[2]))
         f2.write(Divide(words[1],words[2]))
         f2.write("\n")
         
     elif words[0]=="rs":
-        i=int(words[2][1:])
-        dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[1]]>>i
+        n1=int(words[2][1:])
+        dictionary_of_reg_values[words[1]]=dictionary_of_reg_values[words[1]]>>n1
         dictionary_of_reg_binary[words[1]]=str(bin(dictionary_of_reg_values[words[1]])[2:])
         dictionary_of_reg_binary[words[1]]="0"*(16-len(dictionary_of_reg_binary[words[1]]))+dictionary_of_reg_binary[words[1]]
         print(Right_Shift(words[1],words[2][1:]))
@@ -598,6 +598,10 @@ for line in lines:
     
     elif ":" in words[0]:
         s=words[1:]
+        if words[1]=='hlt':
+            halt_finder=1
+            print(Halt())
+            break
         s1=""
         for x in s:
             s1=s1+x+" "
@@ -619,3 +623,4 @@ if halt_finder!=1:
 #print(dictionary_of_label_addresses_decimal)
 #print(dictionary_of_reg_values)
 #print(dictionary_of_reg_binarys)
+
